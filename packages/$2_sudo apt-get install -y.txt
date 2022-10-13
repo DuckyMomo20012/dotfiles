@@ -1,0 +1,11 @@
+# My Internet driver
+r8168-dkms
+
+# Sound settings
+pavucontrol
+
+# To fix my front jack problem
+alsa-tools-gui
+
+# Extension manager
+gnome-shell-extension-manager

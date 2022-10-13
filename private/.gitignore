@@ -1,0 +1,9 @@
+*
+!README.md
+!update-token.sh
+!.gitignore
+!*.gpg
+!\!*
+
+# This will keep all "!" files in the subdirectory
+!/*
