@@ -46,7 +46,7 @@
 [gitflow "prefix"]
 	versiontag = v
 [sequence]
-	editor = interactive-rebase-tool
+	editor = nano
 [alias]
 	a = add --all
 	ai = add -i
