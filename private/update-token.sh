@@ -21,7 +21,9 @@ printUsage() {
 while getopts ':t:bh' opt; do
   case "$opt" in
     t)
-        new_token="${OPTARG}"
+        # NOTE: We strip the leading ghp_ from the new token and add it back
+        # later
+        new_token="${OPTARG#ghp_}"
         ;;
 
     b)
