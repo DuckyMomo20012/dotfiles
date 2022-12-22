@@ -86,6 +86,7 @@ stopsudo() {
         # Suppress "Killed" message
         # Ref: https://stackoverflow.com/a/5722874/12512981
         wait "$SUDO_PID" 2>/dev/null
+        # Untrap INT TERM
         trap - INT TERM
         # Unvalidate sudo credentials
         sudo -k
