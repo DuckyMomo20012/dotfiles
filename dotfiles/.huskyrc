@@ -2,8 +2,8 @@
 
 # This loads nvm.sh and sets the correct PATH before running hook
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/nvm.sh" ] && bash "$NVM_DIR/nvm.sh"
 
 # This loads asdf.sh and sets the correct PATH before running hook
 export ASDF_DIR="$HOME/.asdf"
-[ -s "$ASDF_DIR/asdf.sh" ] && \. "$ASDF_DIR/asdf.sh"
+[ -s "$ASDF_DIR/asdf.sh" ] && bash "$ASDF_DIR/asdf.sh"
