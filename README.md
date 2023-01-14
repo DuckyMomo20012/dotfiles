@@ -138,6 +138,7 @@ make sure all dependency packages are installed.
 ### :card_index_dividers: Project Structure:
 
 - [`asdf`](./asdf/): Setup the `asdf` tool version manager and install plugins.
+- [`completions`](./completions/): Setup `bash` completions.
 - [`crontab`](./crontab/): Setup cron jobs.
 - [`dotfiles`](./dotfiles/): Setup dotfiles.
 - [`gpg`](./gpg/): Scripts to encrypt files in the `private` directory or
@@ -175,7 +176,8 @@ Then the code below will do the following:
 - Import the secret key from the `secret.asc` file.
 - Decrypt the `private` directory.
 
-> **Note**: `secret.asc` file should be a secret key file, not a public key file.
+> **Note**: `secret.asc` file should be a secret key file, not a public key
+> file.
 
 > **Note**: Please replace `<YOUR-PASSWORD>` with your passphrase, or you can
 > remove it and enter your passphrase when prompted.
@@ -231,7 +233,8 @@ Contributions are always welcome!
 
 ### :scroll: Code of Conduct
 
-Please read the [Code of Conduct](https://github.com/DuckyMomo20012/dotfiles/blob/main/CODE_OF_CONDUCT.md).
+Please read the
+[Code of Conduct](https://github.com/DuckyMomo20012/dotfiles/blob/main/CODE_OF_CONDUCT.md).
 
 <!-- FAQ -->
 
@@ -239,8 +242,8 @@ Please read the [Code of Conduct](https://github.com/DuckyMomo20012/dotfiles/blo
 
 - Is this project still maintained?
 
-  - Yes, I will add more dotfiles when I use new tools or have some modifications
-    to my current dotfiles.
+  - Yes, I will add more dotfiles when I use new tools or have some
+    modifications to my current dotfiles.
 
 - Is this project support other Linux distributions or MacOS?
 
@@ -252,8 +255,8 @@ Please read the [Code of Conduct](https://github.com/DuckyMomo20012/dotfiles/blo
 ## :warning: License
 
 Distributed under MIT license. See
-[LICENSE](https://github.com/DuckyMomo20012/dotfiles/blob/main/LICENSE)
-for more information.
+[LICENSE](https://github.com/DuckyMomo20012/dotfiles/blob/main/LICENSE) for more
+information.
 
 <!-- Contact -->
 
@@ -262,7 +265,8 @@ for more information.
 Duong Vinh - [@duckymomo20012](https://twitter.com/duckymomo20012) -
 tienvinh.duong4@gmail.com
 
-Project Link: [https://github.com/DuckyMomo20012/dotfiles](https://github.com/DuckyMomo20012/dotfiles).
+Project Link:
+[https://github.com/DuckyMomo20012/dotfiles](https://github.com/DuckyMomo20012/dotfiles).
 
 <!-- Acknowledgments -->
 
@@ -279,3 +283,12 @@ Here are useful resources and libraries that I have used in my projects:
 
 - [holman/dotfiles](https://github.com/holman/dotfiles): Good folder structure
   and symlink approach.
+
+- [explainshell.com](https://explainshell.com/): A website to explain shell
+  commands.
+
+- [ShellCheck](https://www.shellcheck.net/): Finds bugs in your shell scripts.
+
+<!-- Ref: https://stackoverflow.com/questions/9725675/is-there-a-standard-format-for-command-line-shell-help-text -->
+
+- [DOCOPT](http://docopt.org/): Command-line interface description language.
