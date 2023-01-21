@@ -15,8 +15,13 @@ _npm() {
     # devDependencies keys
 
     # Finally, remove duplicates and newlines
-    packages=$(find * -type f -name "package.json" -not -path "*node_modules*" \
+    packages=$(find ./* -type f -name "package.json" -not -path "*node_modules*" \
         -exec jq -n 'inputs | .dependencies + .devDependencies | try keys[] catch ""' {} '+' \
+        | awk '!seen[$0]++' \
+        | tr '\n' ' ')
+
+    scripts=$(find ./* -type f -name "package.json" -not -path "*node_modules*" \
+        -exec jq -n 'inputs | .scripts | try keys[] catch ""' {} '+' \
         | awk '!seen[$0]++' \
         | tr '\n' ' ')
 
@@ -28,9 +33,14 @@ _npm() {
 
     case "$cmd" in
         install | add | remove)
+            # shellcheck disable=SC2207
             COMPREPLY=( $(compgen -W "$packages" -- "$cur") )
             ;;
 
+        *)
+            # shellcheck disable=SC2207
+            COMPREPLY=( $(compgen -W "$scripts" -- "$cur") )
+            ;;
     esac
 
     return 0
