@@ -10,9 +10,9 @@ The `setup.sh` will add completion scripts to the file `~/.bashrc`:
 
   - Commands:
 
-    - `npm {install | add | remove}`.
-    - `yarn {install | add | remove}`.
-    - `pnpm {install | add | remove}`.
+    - `npm {install | i | add | remove | rm | uninstall | un}`.
+    - `yarn {install | i | add | remove | rm | uninstall | un}`.
+    - `pnpm {install | i | add | remove | rm | uninstall | un}`.
 
     > **Note**: `install` is not a valid command for `yarn` and `pnpm` or `add`
     > is not a valid command for `npm`, but the completion script still works.
@@ -31,10 +31,26 @@ The `setup.sh` will add completion scripts to the file `~/.bashrc`:
       `HOME` directory, it can find all `package.json` files in your system, and
       give you better completion.
 
+  ***
+
+  - Commands:
+
+    - `npm`
+    - `yarn`
+    - `pnpm`
+
+  - Description:
+
+    - This is default case, so it will behave the same as the above case, but it
+      will register completions for `scripts` in `package.json` file instead of
+      the `dependencies` and `devDependencies`.
+
+  ***
+
   - Usage:
 
     ```bash
-    ./npm.sh
+    source ./npm.sh
     ```
 
 ## Usage
