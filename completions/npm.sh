@@ -32,7 +32,7 @@ _npm() {
     COMPREPLY=()
 
     case "$cmd" in
-        install | add | remove)
+        install | i | add | remove | rm | uninstall | un)
             # shellcheck disable=SC2207
             COMPREPLY=( $(compgen -W "$packages" -- "$cur") )
             ;;
