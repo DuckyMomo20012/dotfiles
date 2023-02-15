@@ -176,6 +176,6 @@ installDotFiles() {
 
         dst="$HOME/$dir"
 
-        symlink "$src" "$dst" "$2"
+        symlink "$src" "$dst" "$action"
     done
 }

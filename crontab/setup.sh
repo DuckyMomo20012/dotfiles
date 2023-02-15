@@ -26,7 +26,7 @@ printUsage() {
 while getopts ':bh' opt; do
   case "$opt" in
     b)
-        acion="B"
+        action="B"
         ;;
 
     h)
