@@ -10,6 +10,7 @@ cd "$crontab_dir"
 
 # Default values
 default_action="B"
+default_backupFile="$crontab_dir/crontab.bak"
 
 action="$default_action"
 
@@ -49,7 +50,12 @@ done
 
 if [[ "$action" == "B" ]]; then
     info "Backing up current crontab..."
-    . ./export.sh -f "$crontab_dir/crontab.bak"
+    . ./export.sh -f "$default_backupFile"
+
+    if [[ -f "$default_backupFile" && ! -s "$default_backupFile"  ]]; then
+        info "File $default_backupFile is empty, no crontab jobs to backup, removing file..."
+        rm -rf "$default_backupFile"
+    fi
 fi
 
 # Export current crontab to temporary file to append new jobs

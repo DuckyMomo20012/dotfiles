@@ -17,6 +17,8 @@ The `setup.sh` will import the crontab files into the system.
       system. The temporary file `crontab.txt` will be deleted after the import.
     - Default backup cronjobs before adding new cronjobs. Default:
       `crontab.bak`.
+      - If the backup file already exists, it will be overwritten.
+      - If the backup file is empty (no cronjobs), it will be deleted.
 
   - Usage:
 
