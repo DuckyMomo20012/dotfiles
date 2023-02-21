@@ -36,3 +36,6 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 
 # Add your user to the docker group
 sudo usermod -aG docker $USER
+
+# Install buildx
+sudo docker buildx install
