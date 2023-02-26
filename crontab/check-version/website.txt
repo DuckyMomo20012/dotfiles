@@ -1,2 +1,2 @@
-NodeJS,https://nodejs.org/en/,Download , LTS,18.14.0
+NodeJS,https://nodejs.org/en/,Download , LTS,18.14.2
 Python,https://www.python.org/downloads/,Download Python ,,3.11.2
