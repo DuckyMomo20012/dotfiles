@@ -8,6 +8,6 @@ info "Installing NodeJS..."
 
 asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
 
-asdf install nodejs 18.12.0
+asdf install nodejs 18.14.12
 
-asdf global nodejs 18.12.0
+asdf global nodejs 18.14.12
