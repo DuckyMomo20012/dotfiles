@@ -293,3 +293,7 @@ Here are useful resources and libraries that I have used in my projects:
 <!-- Ref: https://stackoverflow.com/questions/9725675/is-there-a-standard-format-for-command-line-shell-help-text -->
 
 - [DOCOPT](http://docopt.org/): Command-line interface description language.
+
+- [Command Line Interface Guidelines](https://clig.dev/): An open-source guide
+  to help you write better command-line programs, taking traditional UNIX
+  principles and updating them for the modern day.
