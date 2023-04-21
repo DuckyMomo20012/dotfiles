@@ -152,6 +152,7 @@ make sure all dependency packages are installed.
   - [`private/dotfiles-example`](./private/dotfiles-example): Example private
     dotfiles configuration.
 - [`utils`](./utils/): Utility scripts for this project.
+- [`zsh`](./zsh/): Setup `zsh` shell.
 
 Each directory will have a `README.md` file to explain what it does and how to
 customize.
