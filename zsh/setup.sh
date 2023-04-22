@@ -21,4 +21,6 @@ export ZSH="$HOME/.oh-my-zsh"
 
 rm -rf "$ZSH"
 
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+# NOTE: We only clone the repo, the `.zshrc` file is only defined in the
+# `dotfiles` directory
+git clone https://github.com/ohmyzsh/ohmyzsh.git "$ZSH"
