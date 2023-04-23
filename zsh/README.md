@@ -5,17 +5,20 @@ This directory setup [zsh](https://www.zsh.org/), with
 
 ## Getting Started
 
-The `setup.sh` will run to install `zsh` with `apt-get`, and change the default
-shell to `zsh`. The `.zhrc` file in the `dotfiles` directory will be symlinked
-to `~/.zshrc`.
+The `setup.sh` will install:
 
-About `oh-my-zsh`, the directory `.oh-my-zsh` will be installed to
-`~/.oh-my-zsh` by default. You can change the `ZSH` variable in the file
-`setup.sh` to change the installation directory.
+- `zsh`: the shell. You can configure the `zsh` in the file `~/.zshrc`.
+- `oh-my-zsh`: the framework for `zsh`.
+  - This will be installed to `~/.oh-my-zsh` by default. You can change the
+    `ZSH` variable in the file `setup.sh` to change the installation directory.
+- `powerlevel10k`: the theme for `oh-my-zsh`. You can configure the theme in the
+  file `~/.p10k.zsh`.
+  - This will be installed to `~/.oh-my-zsh/themes/powerlevel10k` directory by
+    default.
 
-The file `.shell.pre-oh-my-zsh` and `.zshrc.pre-oh-my-zsh` in the `backup`
-directory is backup files of `.zshrc` and `.shell` before installing
-`oh-my-zsh`.
+> The file `.shell.pre-oh-my-zsh` and `.zshrc.pre-oh-my-zsh` in the `backup`
+> directory is backup files of `.zshrc` and `.shell` before installing
+> `oh-my-zsh`.
 
 ## Usage
 
