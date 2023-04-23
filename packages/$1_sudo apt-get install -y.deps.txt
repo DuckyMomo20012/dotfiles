@@ -6,4 +6,4 @@ npm
 gnupg
 
 # For poetry
-python3.10-venv
+python3.11-venv
