@@ -13,8 +13,20 @@ info "Installing asdf..."
 
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.2
 
-pushLineNonDup ". \$HOME/.asdf/asdf.sh" "$HOME/.bashrc"
-pushLineNonDup ". \$HOME/.asdf/completions/asdf.bash" "$HOME/.bashrc"
+
+if [[ -f "$HOME/.bashrc" ]]; then
+    info "Adding asdf to .bashrc..."
+
+    pushLineNonDup ". \$HOME/.asdf/asdf.sh" "$HOME/.bashrc"
+    pushLineNonDup ". \$HOME/.asdf/completions/asdf.bash" "$HOME/.bashrc"
+fi
+
+if [[ -f "$HOME/.bash_profile" ]]; then
+    info "Adding asdf to .bash_profile..."
+
+    pushLineNonDup ". \$HOME/.asdf/asdf.sh" "$HOME/.bash_profile"
+    pushLineNonDup ". \$HOME/.asdf/completions/asdf.bash" "$HOME/.bash_profile"
+fi
 
 . $HOME/.asdf/asdf.sh
 

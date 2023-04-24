@@ -8,4 +8,14 @@ cd "$completion_dir"
 # Load predefined functions
 . ../utils/functions.sh
 
-pushLineNonDup "source $completion_dir/npm.sh" "$HOME/.bashrc"
+if [[ -f "$HOME/.bashrc" ]]; then
+    info "Adding completion to .bashrc..."
+
+    pushLineNonDup "source $completion_dir/npm.sh" "$HOME/.bashrc"
+fi
+
+if [[ -f "$HOME/.bash_profile" ]]; then
+    info "Adding completion to .bash_profile..."
+
+    pushLineNonDup "source $completion_dir/npm.sh" "$HOME/.bash_profile"
+fi
