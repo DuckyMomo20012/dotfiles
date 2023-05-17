@@ -9,7 +9,7 @@ sudo apt-get remove docker docker-engine docker.io containerd runc
 # repository over HTTPS
 sudo apt-get update
 
-sudo apt-get install \
+sudo apt-get install -y \
     ca-certificates \
     curl \
     gnupg \
@@ -30,7 +30,7 @@ echo \
 sudo apt-get update
 
 # Install Docker Engine, containerd, and Docker Compose.
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 # Post installation steps
 
