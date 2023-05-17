@@ -22,7 +22,7 @@ printUsage() {
     echo "  -h    Show help message"
 }
 
-while getopts ':bh' opt; do
+while getopts ':kh' opt; do
   case "$opt" in
     k)
         action="K"
