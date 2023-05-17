@@ -112,3 +112,6 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 [[ ! -f ~/.bash_profile ]] || source ~/.bash_profile
+. $HOME/.asdf/asdf.sh
+. $HOME/.asdf/completions/asdf.bash
+source /home/vinh/dotfiles/completions/npm.sh

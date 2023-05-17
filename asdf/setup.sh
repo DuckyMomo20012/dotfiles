@@ -21,11 +21,11 @@ if [[ -f "$HOME/.bashrc" ]]; then
     pushLineNonDup ". \$HOME/.asdf/completions/asdf.bash" "$HOME/.bashrc"
 fi
 
-if [[ -f "$HOME/.bash_profile" ]]; then
-    info "Adding asdf to .bash_profile..."
+if [[ -f "$HOME/.zshrc" ]]; then
+    info "Adding asdf to .zshrc..."
 
-    pushLineNonDup ". \$HOME/.asdf/asdf.sh" "$HOME/.bash_profile"
-    pushLineNonDup ". \$HOME/.asdf/completions/asdf.bash" "$HOME/.bash_profile"
+    pushLineNonDup ". \$HOME/.asdf/asdf.sh" "$HOME/.zshrc"
+    pushLineNonDup ". \$HOME/.asdf/completions/asdf.bash" "$HOME/.zshrc"
 fi
 
 . $HOME/.asdf/asdf.sh

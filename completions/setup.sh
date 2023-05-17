@@ -14,8 +14,8 @@ if [[ -f "$HOME/.bashrc" ]]; then
     pushLineNonDup "source $completion_dir/npm.sh" "$HOME/.bashrc"
 fi
 
-if [[ -f "$HOME/.bash_profile" ]]; then
-    info "Adding completion to .bash_profile..."
+if [[ -f "$HOME/.zshrc" ]]; then
+    info "Adding completion to .zshrc..."
 
-    pushLineNonDup "source $completion_dir/npm.sh" "$HOME/.bash_profile"
+    pushLineNonDup "source $completion_dir/npm.sh" "$HOME/.zshrc"
 fi
