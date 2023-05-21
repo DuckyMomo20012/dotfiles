@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-crontab_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+docker_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # We have cd to directory to make sure find only searches in this directory
-cd "$crontab_dir"
+cd "$docker_dir"
 
 # Load predefined functions
 . ../utils/functions.sh
