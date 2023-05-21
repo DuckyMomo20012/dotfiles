@@ -116,3 +116,4 @@ source $ZSH/oh-my-zsh.sh
 . $HOME/.asdf/completions/asdf.bash
 source /home/vinh/dotfiles/completions/npm.sh
 export PATH=$HOME/.local/bin:$PATH
+source <(kubectl completion zsh)
