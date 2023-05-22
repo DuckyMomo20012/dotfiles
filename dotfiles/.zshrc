@@ -118,3 +118,6 @@ source /home/vinh/dotfiles/completions/npm.sh
 export PATH=$HOME/.local/bin:$PATH
 source <(kubectl completion zsh)
 source <(k3d completion zsh)
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/bin/terraform terraform
