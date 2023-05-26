@@ -82,3 +82,15 @@ You can also install [`k3d`](https://k3d.io/stable/) kubernetes cluster with the
     ```
     ./kubectl.setup.sh
     ```
+
+- File `terraform.setup.sh`: Setup `terraform` command-line tool.
+
+  - Description:
+
+    - Setup `terraform` command-line tool.
+
+  - Usage:
+
+    ```
+    ./terraform.setup.sh
+    ```
