@@ -15,11 +15,11 @@ curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Setup k3d autocompletion for .bashrc..."
 
-    pushLineNonDup "source <(k3d completion bash)" "$HOME/.bashrc"
+    pushLineNonDup "if command -v k3d >/dev/null 2>&1; then source <(k3d completion bash); fi" "$HOME/.bashrc"
 fi
 
 if [[ -f "$HOME/.zshrc" ]]; then
     info "Setup k3d autocompletion for .zshrc..."
 
-    pushLineNonDup "source <(k3d completion zsh)" "$HOME/.zshrc"
+    pushLineNonDup "if command -v k3d >/dev/null 2>&1; then source <(k3d completion zsh); fi" "$HOME/.zshrc"
 fi

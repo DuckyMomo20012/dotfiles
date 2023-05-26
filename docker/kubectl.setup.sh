@@ -17,13 +17,13 @@ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Setup kubectl autocompletion for .bashrc..."
 
-    pushLineNonDup "source <(kubectl completion bash)" "$HOME/.bashrc"
+    pushLineNonDup "if command -v kubectl >/dev/null 2>&1; then source <(kubectl completion bash); fi" "$HOME/.bashrc"
 fi
 
 if [[ -f "$HOME/.zshrc" ]]; then
     info "Setup kubectl autocompletion for .zshrc..."
 
-    pushLineNonDup "source <(kubectl completion zsh)" "$HOME/.zshrc"
+    pushLineNonDup "if command -v kubectl >/dev/null 2>&1; then source <(kubectl completion zsh); fi" "$HOME/.zshrc"
 fi
 
 rm -rf kubectl
