@@ -116,8 +116,8 @@ source $ZSH/oh-my-zsh.sh
 . $HOME/.asdf/completions/asdf.bash
 source /home/vinh/dotfiles/completions/npm.sh
 export PATH=$HOME/.local/bin:$PATH
-source <(kubectl completion zsh)
-source <(k3d completion zsh)
+if command -v kubectl >/dev/null 2>&1; then source <(kubectl completion zsh); fi
+if command -v k3d >/dev/null 2>&1; then source <(k3d completion zsh); fi
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
