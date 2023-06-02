@@ -12,8 +12,14 @@ info "Installing Poetry..."
 
 curl -sSL https://install.python-poetry.org | python3 -
 
+if [[ -f "$HOME/.bashrc" ]]; then
+    info "Adding poetry to .bashrc..."
+
+    pushLineNonDup "export PATH=\$HOME/.local/bin:\$PATH" "$HOME/.bashrc"
+fi
+
 if [[ -f "$HOME/.zshrc" ]]; then
     info "Adding poetry to .zshrc..."
 
-    pushLineNonDup "export PATH="\$HOME/.local/bin:\$PATH"" "$HOME/.zshrc"
+    pushLineNonDup "export PATH=\$HOME/.local/bin:\$PATH" "$HOME/.zshrc"
 fi
