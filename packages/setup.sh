@@ -14,7 +14,19 @@ mkdir -p "$HOME/.npm-global"
 
 # NOTE: We don't use command to set config because npm is not installed yet
 pushLineNonDup "prefix=\${HOME}/.npm-global" "$HOME/.npmrc"
-pushLineNonDup "export PATH=~/.npm-global/bin:\$PATH" "$HOME/.profile"
+
+if [[ -f "$HOME/.bashrc" ]]; then
+    info "Adding .npm-global to .bashrc..."
+
+    pushLineNonDup "export PATH=\$HOME/.npm-global/bin:\$PATH" "$HOME/.bashrc"
+fi
+
+if [[ -f "$HOME/.zshrc" ]]; then
+    info "Adding .npm-global to .zshrc..."
+
+    pushLineNonDup "export PATH=\$HOME/.npm-global/bin:\$PATH" "$HOME/.zshrc"
+fi
+
 
 export PATH=~/.npm-global/bin:$PATH
 
