@@ -120,6 +120,7 @@ export PATH=$HOME/.npm-global/bin:$PATH
 if command -v kubectl >/dev/null 2>&1; then source <(kubectl completion zsh); fi
 if command -v k3d >/dev/null 2>&1; then source <(k3d completion zsh); fi
 if command -v helm >/dev/null 2>&1; then source <(helm completion zsh); fi
+if command -v helmfile >/dev/null 2>&1; then source <(helmfile completion zsh); fi
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
