@@ -29,8 +29,8 @@ printUsage() {
 }
 
 # Ref: https://www.baeldung.com/linux/bash-parse-command-line-arguments
-# NOTE: I added a colon before optstring to suppress error message and handle
-# manually with ":" and "?" cases
+# NOTE: I added a colon at the beginning of the optstring to suppress error
+# message and handle manually with ":" and "?" cases
 while getopts ':f:d:p:h' opt; do
   case "$opt" in
     f)
