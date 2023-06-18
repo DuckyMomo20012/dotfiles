@@ -8,6 +8,8 @@ cd "$docker_dir"
 # Load predefined functions
 . ../utils/functions.sh
 
+info "Installing helmfile..."
+
 OS="linux"
 ARCH="amd64"
 

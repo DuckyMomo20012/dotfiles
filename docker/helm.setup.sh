@@ -8,6 +8,8 @@ cd "$docker_dir"
 # Load predefined functions
 . ../utils/functions.sh
 
+info "Installing helm..."
+
 curl -s https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
 # Install helm plugins

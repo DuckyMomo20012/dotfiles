@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+info() {
+    tput bold;tput setaf "6";tput setab "7";echo "$1";tput sgr0;tput el;
+}
+
+info "Installing terraform..."
+
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
 
 wget -O- https://apt.releases.hashicorp.com/gpg | \

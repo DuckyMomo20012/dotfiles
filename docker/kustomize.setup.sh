@@ -8,6 +8,7 @@ cd "$docker_dir"
 # Load predefined functions
 . ../utils/functions.sh
 
+info "Installing kustomize..."
 
 curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
 
