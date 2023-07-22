@@ -1,7 +1,6 @@
-# docker
+# devops
 
-This directory will set up the `docker` with `docker-engine` and
-`docker-compose`.
+This directory will set up DevOps tools.
 
 ## Description
 
