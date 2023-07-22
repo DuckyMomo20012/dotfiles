@@ -9,28 +9,6 @@ cd "$packages_dir"
 . ../utils/functions.sh
 
 ############################################
-# Prep for npm install global
-mkdir -p "$HOME/.npm-global"
-
-# NOTE: We don't use command to set config because npm is not installed yet
-pushLineNonDup "prefix=\${HOME}/.npm-global" "$HOME/.npmrc"
-
-if [[ -f "$HOME/.bashrc" ]]; then
-    info "Adding .npm-global to .bashrc..."
-
-    pushLineNonDup "export PATH=\$HOME/.npm-global/bin:\$PATH" "$HOME/.bashrc"
-fi
-
-if [[ -f "$HOME/.zshrc" ]]; then
-    info "Adding .npm-global to .zshrc..."
-
-    pushLineNonDup "export PATH=\$HOME/.npm-global/bin:\$PATH" "$HOME/.zshrc"
-fi
-
-
-export PATH=~/.npm-global/bin:$PATH
-
-############################################
 
 
 COMMENT=\#*
@@ -57,4 +35,15 @@ find * -name "*.txt" -type f | while read fileName; do
     done < "$fileName"
 
     success "Finished installing \"$1\" packages."
+done
+
+############################################
+
+find * -name "*.sh" -not -path "setup.sh" | while read setup; do
+    # NOTE: We cd back to make sure the directory is correct
+    cd "$packages_dir"
+
+    info "Running $setup..."
+
+    . ./$setup
 done
