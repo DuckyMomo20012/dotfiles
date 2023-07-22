@@ -2,7 +2,7 @@
 
 This directory will symlink dotfiles to the home directory.
 
-## Getting Started
+## Description
 
 `setup.sh` will find all **files** or **directories** (including dotfiles) in
 `dotfiles` directory and symlink them to the home directory.

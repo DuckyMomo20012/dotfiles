@@ -2,10 +2,10 @@
 
 This directory will check the version from list of URLs.
 
-## Getting Started
+## Description
 
-File `setup.sh` will read URLs from a text file, e.g., `website.txt`, crawl and check
-the version of the website with pattern in that text file.
+File `setup.sh` will read URLs from a text file, e.g., `website.txt`, crawl and
+check the version of the website with pattern in that text file.
 
 ## Prerequisites
 
@@ -32,8 +32,8 @@ the version of the website with pattern in that text file.
     > **MUST NOT** capture any group (with a parenthesis "`()`"). Why? **Because
     > the first group captures the version**.
 
-    > **Note**: Any special characters (`^$|[]()\.*+?`) in the `prefix` and `suffix`
-    > should be escaped with `\` character.
+    > **Note**: Any special characters (`^$|[]()\.*+?`) in the `prefix` and
+    > `suffix` should be escaped with `\` character.
 
   - You should find **a unique sentence** in `url` content that has the
     [semver](https://semver.org/) version in it, e.g., "Download 16.17.1 LTS"
@@ -48,12 +48,12 @@ the version of the website with pattern in that text file.
     Python,https://www.python.org/downloads/,Download Python ,,3.10.8
     ```
 
-    - The first line will find a version in "Download `...` LTS" and the
-      compare with old version is `16.17.1`.
+    - The first line will find a version in "Download `...` LTS" and the compare
+      with old version is `16.17.1`.
 
     - The second line will find a version in "Download Python `...`", because we
-      don't have any `suffix` characters so we can skip it, and then compare with
-      old version is `3.10.8`.
+      don't have any `suffix` characters so we can skip it, and then compare
+      with old version is `3.10.8`.
 
 ## Usage
 
@@ -61,8 +61,8 @@ the version of the website with pattern in that text file.
 
   - Description:
 
-    - Read URLs from a text file, e.g., `website.txt`, crawl and check the version
-      of the website with pattern in that text file.
+    - Read URLs from a text file, e.g., `website.txt`, crawl and check the
+      version of the website with pattern in that text file.
 
   - Usage:
 
@@ -77,7 +77,8 @@ the version of the website with pattern in that text file.
     - `-b` (backup): Backup the old version to `filename.bak` file.
     - `-h` (help): Show help message.
 
-- Function `crawlAndCheck`: Crawl website content and check for new version changes.
+- Function `crawlAndCheck`: Crawl website content and check for new version
+  changes.
 
   - Description:
 
@@ -104,8 +105,8 @@ the version of the website with pattern in that text file.
       - `O` **(default)**: Overwrite the `oldVersion` in the text file.
       - `B`: Backup the old `websiteListFile` to `websiteListFile.bak` file.
 
-      > **Note**: `sed` is used to update the `oldVersion` in the text file.
-      > It will **match `oldValue` the exact entry in file**, because `name`,
+      > **Note**: `sed` is used to update the `oldVersion` in the text file. It
+      > will **match `oldValue` the exact entry in file**, because `name`,
       > `url`, `prefix`, `suffix` is also passed to `sed` as regex pattern, so
       > you don't have to worry it update the wrong entry.
 
@@ -113,5 +114,5 @@ the version of the website with pattern in that text file.
     > **MUST NOT** capture any group (with a parenthesis "`()`"). Why? **Because
     > the first group captures the version**.
 
-    > **Note**: Any special characters (`^$|[]()\.*+?`) in the `prefix` and `suffix`
-    > should be escaped with `\` character.
+    > **Note**: Any special characters (`^$|[]()\.*+?`) in the `prefix` and
+    > `suffix` should be escaped with `\` character.

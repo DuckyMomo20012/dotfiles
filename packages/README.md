@@ -2,7 +2,7 @@
 
 This directory will install packages or tools that I use.
 
-## Getting Started
+## Description
 
 > **Note**: The file `setup.sh` in this directory will run first to install the
 > necessary packages for other directories to run.

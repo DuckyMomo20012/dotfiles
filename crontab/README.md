@@ -2,7 +2,7 @@
 
 Import crontab files into the system.
 
-## Getting Started
+## Description
 
 The `setup.sh` will import the crontab files into the system.
 

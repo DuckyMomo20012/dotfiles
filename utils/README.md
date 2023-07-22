@@ -2,7 +2,7 @@
 
 This directory contains utility scripts used by this project.
 
-## Getting Started
+## Description
 
 - `crypto.sh`: This script contains functions to encrypt/decrypt files and
   directories using `gpg`.
@@ -51,9 +51,9 @@ This directory contains utility scripts used by this project.
       the destination directory.
     - After extracting, it will remove the tar file.
 
-    > **Warning**: This script will overwrite your existing files and directories
-    > in the `dst` directory. So you should backup your existing files and directories
-    > before running this.
+    > **Warning**: This script will overwrite your existing files and
+    > directories in the `dst` directory. So you should backup your existing
+    > files and directories before running this.
 
   - Usage:
 
@@ -76,8 +76,8 @@ This directory contains utility scripts used by this project.
 
     - Export `gpg` secret keys to the file.
 
-    > **Note**: This will export all necessary information to restore the secrets
-    > keys including the trust database information
+    > **Note**: This will export all necessary information to restore the
+    > secrets keys including the trust database information
 
     > **Warning**: This will export all secret keys, so you should keep this
     > file safe.
@@ -301,6 +301,6 @@ This directory contains utility scripts used by this project.
 
     - `dotfiles_dir`: The directory that contains dot files to create a symbolic
       link to.
-    - `action`: Backup or overwrite if the file or directory already
-      exists in `$HOME` directory. Please refer to `symlink` function for more
-      details about this parameter.
+    - `action`: Backup or overwrite if the file or directory already exists in
+      `$HOME` directory. Please refer to `symlink` function for more details
+      about this parameter.

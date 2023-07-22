@@ -2,7 +2,7 @@
 
 Register command completion scripts for `bash` shell.
 
-## Getting Started
+## Description
 
 The `setup.sh` will add completion scripts to the file `~/.bashrc`:
 

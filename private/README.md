@@ -3,7 +3,7 @@
 This directory contains private files that are not meant to be shared with the
 public.
 
-## Getting Started
+## Description
 
 Every file or directory in this directory can be encrypted with `gpg` using
 [dotfiles/gpg/endot.sh](../gpg/endot.sh) script. Please refer to

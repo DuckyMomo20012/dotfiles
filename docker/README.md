@@ -3,7 +3,7 @@
 This directory will set up the `docker` with `docker-engine` and
 `docker-compose`.
 
-## Getting Started
+## Description
 
 First, the file `!setup.sh` will install `docker` following the
 [official guide](https://docs.docker.com/engine/install/ubuntu/) for Ubuntu.
