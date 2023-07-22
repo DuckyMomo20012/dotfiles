@@ -3,9 +3,9 @@
 ############################################
 # Prepare environment
 
-curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+gpg_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-cd "$curr_dir"
+cd "$gpg_dir"
 
 # Load predefined functions
 . ../utils/crypto.sh
@@ -17,7 +17,7 @@ cd "$curr_dir"
 # Default values
 default_email="tienvinh.duong4@gmail.com"
 # Src directory should be absolute path
-default_src="$(cd "$curr_dir/../private" && pwd)"
+default_src="$(cd "$gpg_dir/../private" && pwd)"
 # Destination dir is tar file name
 default_dstTarFile="encrypted.tar.gz"
 

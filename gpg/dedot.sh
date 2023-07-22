@@ -3,9 +3,9 @@
 ############################################
 # Prepare environment
 
-curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+gpg_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-cd "$curr_dir"
+cd "$gpg_dir"
 
 # Load predefined functions
 . ../utils/crypto.sh
@@ -16,8 +16,8 @@ cd "$curr_dir"
 
 
 # Default values
-default_src="$(cd "$curr_dir/../private" && pwd)/encrypted.tar.gz.gpg"
-default_dst="$(cd "$curr_dir/../private" && pwd)"
+default_src="$(cd "$gpg_dir/../private" && pwd)/encrypted.tar.gz.gpg"
+default_dst="$(cd "$gpg_dir/../private" && pwd)"
 
 src="$default_src"
 dst="$default_dst"

@@ -3,9 +3,9 @@
 ############################################
 # Prepare environment
 
-curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+project_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-cd "$curr_dir"
+cd "$project_dir"
 
 # Load predefined functions
 . ./utils/functions.sh
@@ -25,10 +25,10 @@ if [[ $? == 0 ]]; then
     # Package control must be executed first in order for the rest to work
     . ./packages/setup.sh
 
-    cd "$curr_dir"
+    cd "$project_dir"
     find * -name "setup.sh" -not -path "packages*" | while read setup; do
         # NOTE: We have to cd back to maintain relative path
-        cd "$curr_dir"
+        cd "$project_dir"
 
         . ./$setup
     done

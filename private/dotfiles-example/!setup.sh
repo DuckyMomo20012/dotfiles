@@ -3,9 +3,9 @@
 ############################################
 # Prepare environment
 
-curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+dotfiles_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-cd "$curr_dir"
+cd "$dotfiles_dir"
 
 # Load predefined functions
 . ../utils/functions.sh
@@ -14,4 +14,4 @@ cd "$curr_dir"
 # Script body
 
 
-installDotFiles "$curr_dir"
+installDotFiles "$dotfiles_dir"
