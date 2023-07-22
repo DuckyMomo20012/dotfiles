@@ -2,7 +2,7 @@
 
 This directory will symlink dotfiles to the home directory.
 
-## Getting Started
+## Description
 
 This directory will process the same way as the [dotfiles](../../dotfiles)
 directory.

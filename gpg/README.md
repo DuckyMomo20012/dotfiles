@@ -2,7 +2,7 @@
 
 This directory includes `gpg` utility scripts.
 
-## Getting Started
+## Description
 
 These scripts can be used to encrypt a directory, e.g., `private` or
 export/import gpg keys.
@@ -80,9 +80,9 @@ All of these scripts are just wrappers around functions in
 
     - Export `gpg` secret keys to the file.
 
-    > **Note**: This will export all necessary information to restore the secrets
-    > keys including the trust database information. If you want to export
-    > public key only, you can use the function `exportPublicKey` in
+    > **Note**: This will export all necessary information to restore the
+    > secrets keys including the trust database information. If you want to
+    > export public key only, you can use the function `exportPublicKey` in
     > [utils/crypto.sh](../utils/crypto.sh).
 
     > **Warning**: This will export all secret keys, so you should keep this

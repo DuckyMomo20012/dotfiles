@@ -3,7 +3,7 @@
 This directory setup [zsh](https://www.zsh.org/), with
 [oh-my-zsh](https://ohmyz.sh/).
 
-## Getting Started
+## Description
 
 The `setup.sh` will install:
 

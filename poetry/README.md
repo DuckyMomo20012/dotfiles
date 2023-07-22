@@ -2,9 +2,10 @@
 
 This directory will setup the `poetry` tool version manager for python.
 
-## Getting Started
+## Description
 
-File `setup.sh` will install `poetry` following the [official guide](https://python-poetry.org/docs/#installation).
+File `setup.sh` will install `poetry` following the
+[official guide](https://python-poetry.org/docs/#installation).
 
 ## Usage
 

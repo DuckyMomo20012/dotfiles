@@ -3,10 +3,10 @@
 As its name implies, this directory contains script to run miscellaneous
 commands.
 
-## Getting Started
+## Description
 
-The `setup.sh` only run to fix time conflicts when switching between
-Linux and Windows.
+The `setup.sh` only run to fix time conflicts when switching between Linux and
+Windows.
 
 ## Usage
 
