@@ -14,52 +14,12 @@ cd "$curr_dir"
 # Script body
 
 
-# Default values
-default_action="K"
+# Install tools
+find * -name "*.sh" -not -path "setup.sh" | while read setup; do
+    # NOTE: We cd back to make sure the directory is correct
+    cd "$curr_dir"
 
-action="$default_action"
+    info "Running $setup..."
 
-printUsage() {
-    echo "Setup docker"
-    echo ""
-    echo "Usage: $(basename $0) [options]"
-    echo "Options:"
-    echo "  -k    Setup k3d kubernetes cluster"
-    echo "  -h    Show help message"
-}
-
-while getopts ':kh' opt; do
-  case "$opt" in
-    k)
-        action="K"
-        ;;
-
-    h)
-        printUsage
-        exit 0
-        ;;
-
-    :)
-        echo -e "$0: option requires an argument.\n"
-        printUsage
-        exit 1
-        ;;
-
-    ?)
-        echo -e "$0: illegal option.\n"
-        printUsage
-        exit 1
-        ;;
-  esac
+    . ./$setup
 done
-
-# Setup docker
-info "Setup docker..."
-. ./docker.setup.sh
-
-if [[ "$action" == "K" ]]; then
-    info "Setup \"k3d\" kubernetes cluster and \"kubectl\"..."
-    . ./k3d.setup.sh
-
-    . ./kubectl.setup.sh
-fi
