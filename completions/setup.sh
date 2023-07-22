@@ -3,25 +3,25 @@
 ############################################
 # Prepare environment
 
-curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+completion_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-cd "$curr_dir"
+cd "$completion_dir"
+
+# Load predefined functions
+. ../utils/functions.sh
 
 ############################################
 # Script body
 
 
-# Load predefined functions
-. ../utils/functions.sh
-
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Adding completion to .bashrc..."
 
-    pushLineNonDup "source $curr_dir/npm.sh" "$HOME/.bashrc"
+    pushLineNonDup "source $completion_dir/npm.sh" "$HOME/.bashrc"
 fi
 
 if [[ -f "$HOME/.zshrc" ]]; then
     info "Adding completion to .zshrc..."
 
-    pushLineNonDup "source $curr_dir/npm.sh" "$HOME/.zshrc"
+    pushLineNonDup "source $completion_dir/npm.sh" "$HOME/.zshrc"
 fi

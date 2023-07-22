@@ -3,9 +3,9 @@
 ############################################
 # Prepare environment
 
-curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+packages_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-cd "$curr_dir"
+cd "$packages_dir"
 
 # Load predefined functions
 . ../utils/functions.sh

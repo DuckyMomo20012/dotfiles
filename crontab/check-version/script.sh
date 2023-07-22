@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 
-curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+############################################
+# Prepare environment
 
-# We have cd to directory to make sure find only searches in this directory
-cd "$curr_dir"
+crontab_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+cd "$crontab_dir"
+
+############################################
+# Script body
+
 
 ############################################
 # NOTE: I didn't extract this to new file because I want this file doesn't have
@@ -81,7 +87,7 @@ crawlAndCheck() {
 COMMENT=\#*
 
 # Default values
-default_websiteListFile="$(cd "$curr_dir" && pwd)/website.txt"
+default_websiteListFile="$(cd "$crontab_dir" && pwd)/website.txt"
 default_action="O"
 
 websiteListFile="$default_websiteListFile"

@@ -3,9 +3,9 @@
 ############################################
 # Prepare environment
 
-curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+asdf_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-cd "$curr_dir"
+cd "$asdf_dir"
 
 # Load predefined functions
 . ../utils/functions.sh
@@ -40,7 +40,7 @@ fi
 
 find * -name "*.sh" -not -path "setup.sh" | while read setup; do
     # NOTE: We cd back to make sure the directory is correct
-    cd "$curr_dir"
+    cd "$asdf_dir"
 
     info "Running $setup..."
 

@@ -3,9 +3,9 @@
 ############################################
 # Prepare environment
 
-curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+poetry_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-cd "$curr_dir"
+cd "$poetry_dir"
 
 # Load predefined functions
 . ../utils/functions.sh
