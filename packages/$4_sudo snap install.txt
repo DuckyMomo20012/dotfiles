@@ -1,2 +1,5 @@
 # For emoji
 emote
+
+# VLC
+vlc
