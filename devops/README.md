@@ -4,92 +4,159 @@ This directory will set up DevOps tools.
 
 ## Description
 
-First, the file `!setup.sh` will install `docker` following the
-[official guide](https://docs.docker.com/engine/install/ubuntu/) for Ubuntu.
+File `setup.sh` will find all script files `*.sh` in the `devops` directory and
+run it.
 
-> **Warning**: This script will also add the current user to the `docker` group
-> for a
-> [**non-root user to run `docker` commands**](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user).
+Each tool setup file should be named as `<tool>.setup.sh`, for example:
+`nodejs.setup.sh` or `python.setup.sh`.
 
-You can also install [`k3d`](https://k3d.io/stable/) kubernetes cluster with the
-`-k` option.
-
-> **Note**: The file `!setup.sh` won't be executed automatically, since it will
-> be ignored (with the `!` prefix) by the file `bootstrap.sh`.
+> **Note**: The file `!setup.sh` won't be executed automatically by the file
+> `bootstrap.sh`, since it will be ignored (with the `!` prefix).
 
 ## Usage
 
-- File `!setup.sh`: Setup docker.
+- File `!setup.sh`: Install all the tools.
 
   - Description:
 
-    - Setup `docker` with `docker-engine` and `docker-compose`.
-    - Setup `k3d` kubernetes cluster.
-    - Setup `kubectl` kubernetes command-line tool and bash completion for
-      `kubectl`.
+    - Install all the tools described in this document.
 
   - Usage:
 
+    ```bash
+    ./setup.sh
     ```
-    ./!setup.sh [-k | -h]
-    ```
 
-    Options:
-
-    - `-k` (k3d): Setup `k3d` kubernetes cluster.
-    - `-h` (help): Show help message.
-
-- File `docker.setup.sh`: Setup docker.
+- File `argocd.setup.sh`: Instal the ArgoCD CLI.
 
   - Description:
 
-    - Setup `docker` with `docker-engine` and `docker-compose`.
+    - Install the ArgoCD CLI from the official
+      [documentation](https://argo-cd.readthedocs.io/en/stable/cli_installation/#download-with-curl).
+
+    - Add the completion script to the `.bashrc` and `.zshrc` files.
 
   - Usage:
 
+    ```bash
+    ./argocd.setup.sh
     ```
+
+- FIle `azure.setup.sh`: Install the Azure CLI.
+
+  - Description:
+
+    - Install the Azure CLI from the official
+      [documentation](https://argo-cd.readthedocs.io/en/stable/cli_installation/#download-with-curl).
+
+  - Usage:
+
+    ```bash
+    ./azure.setup.sh
+    ```
+
+- File `docker.setup.sh`: Install Docker.
+
+  - Description:
+
+    - Install Docker from the official
+      [documentation](https://docs.docker.com/engine/install/ubuntu/).
+
+    - Install Docker as a non-root user from the official
+      [documentation](https://docs.docker.com/engine/install/linux-postinstall/).
+
+  - Usage:
+
+    ```bash
     ./docker.setup.sh
     ```
 
-- File `k3d.setup.sh`: Setup `k3d` kubernetes cluster.
+- File `helm.setup.sh`: Install Helm.
 
   - Description:
 
-    - Setup `k3d` kubernetes cluster.
+    - Install Helm from the official
+      [documentation](https://helm.sh/docs/intro/install/).
 
-    > **Note**: This script won't create a cluster automatically, you need to
-    > manually create a cluster with the command `k3d cluster create mycluster`.
+    - Add the completion script to the `.bashrc` and `.zshrc` files.
 
   - Usage:
 
+    ```bash
+    ./helm.setup.sh
     ```
+
+- File `helmfile.setup.sh`: Install Helmfile.
+
+  - Description:
+
+    - Install Helmfile from the official
+      [documentation](https://helmfile.readthedocs.io/en/latest/#installation).
+
+    - Add the completion script to the `.bashrc` and `.zshrc` files.
+
+  - Usage:
+
+    ```bash
+    ./helmfile.setup.sh
+    ```
+
+- File `k3d.setup.sh`: Install k3d.
+
+  - Description:
+
+    - Install k3d from the official
+      [documentation](https://k3d.io/#installation).
+
+    - Add the completion script to the `.bashrc` and `.zshrc` files.
+
+  - Usage:
+
+    ```bash
     ./k3d.setup.sh
     ```
 
-- File `kubectl.setup.sh`: Setup `kubectl` kubernetes command-line tool.
+- File `kubectl.setup.sh`: Install kubectl.
 
   - Description:
 
-    - Setup `kubectl` kubernetes command-line tool.
+    - Install kubectl from the official
+      [documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/).
 
-    > **Note**: After installation, when you run the command
-    > `kubectl cluster-info`, you may see an error since the `k3d` cluster is
-    > not created yet.
+    - Add the completion script to the `.bashrc` and `.zshrc` files.
 
   - Usage:
 
-    ```
+    ```bash
     ./kubectl.setup.sh
     ```
 
-- File `terraform.setup.sh`: Setup `terraform` command-line tool.
+- File `kustomize.setup.sh`: Install kustomize.
 
   - Description:
 
-    - Setup `terraform` command-line tool.
+    - Install kustomize from the official
+      [documentation](https://kubectl.docs.kubernetes.io/installation/kustomize/binaries/).
+
+    - Add the completion script to the `.bashrc` and `.zshrc` files.
 
   - Usage:
 
+    ```bash
+    ./kustomize.setup.sh
     ```
+
+- File `terraform.setup.sh`: Install Terraform.
+
+  - Description:
+
+    - Install Terraform from the official
+      [documentation](https://learn.hashicorp.com/tutorials/terraform/install-cli).
+
+    - Add the completion script to the `.bashrc` and `.zshrc` files.
+
+  - Usage:
+
+    ```bash
     ./terraform.setup.sh
     ```

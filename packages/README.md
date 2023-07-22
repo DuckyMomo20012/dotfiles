@@ -59,7 +59,7 @@ Finally, it will run script files:
 - `setup.sh` will find all script files `*.sh` in the `packages` directory and
   run it.
 
-- Each plugin setup file should be named as `<plugin>.setup.sh`, for example:
+- Each package setup file should be named as `<package>.setup.sh`, for example:
   `nodejs.setup.sh` or `python.setup.sh`.
 
 ## Usage
