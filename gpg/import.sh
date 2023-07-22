@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
 
-gpg_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+############################################
+# Prepare environment
 
-cd "$gpg_dir"
+curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# NOTE: We have to cd first so we don't have to worry about relative path
+cd "$curr_dir"
+
 # Load predefined functions
 . ../utils/crypto.sh
+
+############################################
+# Script body
+
 
 # Default values
 default_backupFileName="secret.asc"

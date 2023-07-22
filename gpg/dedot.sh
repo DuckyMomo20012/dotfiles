@@ -1,18 +1,23 @@
 #!/usr/bin/env bash
 
-gpg_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+############################################
+# Prepare environment
 
-# We have cd to directory to make sure find only searches in this directory
-cd "$gpg_dir"
+curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# NOTE: We have to cd first so we don't have to worry about relative path
+cd "$curr_dir"
+
 # Load predefined functions
 . ../utils/crypto.sh
 . ../utils/functions.sh
 
+############################################
+# Script body
+
+
 # Default values
-default_src="$(cd "$gpg_dir/../private" && pwd)/encrypted.tar.gz.gpg"
-default_dst="$(cd "$gpg_dir/../private" && pwd)"
+default_src="$(cd "$curr_dir/../private" && pwd)/encrypted.tar.gz.gpg"
+default_dst="$(cd "$curr_dir/../private" && pwd)"
 
 src="$default_src"
 dst="$default_dst"

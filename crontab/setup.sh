@@ -1,16 +1,22 @@
 #!/usr/bin/env bash
 
-crontab_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+############################################
+# Prepare environment
 
-# We have cd to directory to make sure find only searches in this directory
-cd "$crontab_dir"
+curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+cd "$curr_dir"
 
 # Load predefined functions
 . ../utils/functions.sh
 
+############################################
+# Script body
+
+
 # Default values
 default_action="B"
-default_backupFile="$crontab_dir/crontab.bak"
+default_backupFile="$curr_dir/crontab.bak"
 
 action="$default_action"
 
@@ -61,9 +67,9 @@ fi
 # Export current crontab to temporary file to append new jobs
 . ./export.sh
 
-pushLineNonDup "0 */12 */5 * * $crontab_dir/check-version/script.sh" "$crontab_dir/crontab.txt"
+pushLineNonDup "0 */12 */5 * * $curr_dir/check-version/script.sh" "$curr_dir/crontab.txt"
 
 . ./import.sh
 
 # Remove temporary file
-rm -rf "$crontab_dir/crontab.txt"
+rm -rf "$curr_dir/crontab.txt"
