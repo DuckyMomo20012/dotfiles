@@ -54,6 +54,14 @@ the extracted command. An empty line or line starting with `#` will be ignored.
   $z_cmd.txt <-- Install last
   ```
 
+Finally, it will run script files:
+
+- `setup.sh` will find all script files `*.sh` in the `packages` directory and
+  run it.
+
+- Each plugin setup file should be named as `<plugin>.setup.sh`, for example:
+  `nodejs.setup.sh` or `python.setup.sh`.
+
 ## Usage
 
 Run `setup.sh` to install packages:
