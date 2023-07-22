@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
-packages_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+############################################
+# Prepare environment
 
-# We have cd to directory to make sure find only searches in this directory
-cd "$packages_dir"
+curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+cd "$curr_dir"
 
 # Load predefined functions
 . ../utils/functions.sh
 
 ############################################
+# Script body
 
 
 COMMENT=\#*
@@ -41,7 +44,7 @@ done
 
 find * -name "*.sh" -not -path "setup.sh" | while read setup; do
     # NOTE: We cd back to make sure the directory is correct
-    cd "$packages_dir"
+    cd "$curr_dir"
 
     info "Running $setup..."
 

@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
-private_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+############################################
+# Prepare environment
 
-# We have cd to directory to make sure find only searches in this directory
-cd "$private_dir"
+curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+cd "$curr_dir"
+
+############################################
+# Script body
 
 
 new_token=""
@@ -56,6 +61,6 @@ if [[ -z "$new_token" ]]; then
 fi
 
 # Github token will have ghp_ prefix
-sed -i"$backupExt" "s/\(ghp_\)\{0,1\}\w\{36\}/ghp_$new_token/" "$private_dir/dotfiles/.git-credentials"
+sed -i"$backupExt" "s/\(ghp_\)\{0,1\}\w\{36\}/ghp_$new_token/" "$curr_dir/dotfiles/.git-credentials"
 
-sed -i"$backupExt" "s/\(ghp_\)\{0,1\}\w\{36\}/$new_token/" "$private_dir/dotfiles/.gitconfig.local"
+sed -i"$backupExt" "s/\(ghp_\)\{0,1\}\w\{36\}/$new_token/" "$curr_dir/dotfiles/.gitconfig.local"

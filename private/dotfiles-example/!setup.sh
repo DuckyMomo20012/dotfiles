@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 
-dotfiles_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+############################################
+# Prepare environment
 
-# We have cd to directory to make sure find only searches in this directory
-cd "$dotfiles_dir"
+curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# NOTE: We have to cd first so we don't have to worry about relative path
+cd "$curr_dir"
+
 # Load predefined functions
-. ../../utils/functions.sh
+. ../utils/functions.sh
 
-installDotFiles "$dotfiles_dir"
+############################################
+# Script body
+
+
+installDotFiles "$curr_dir"

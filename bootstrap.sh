@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 
-project_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+############################################
+# Prepare environment
 
-# We have cd to directory to make sure find only searches in this directory
-cd "$project_dir"
+curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# NOTE: We have to cd first so we don't have to worry about relative path
+cd "$curr_dir"
+
 # Load predefined functions
 . ./utils/functions.sh
+
+############################################
+# Script body
+
 
 info "Prompt for sudo password..."
 
@@ -20,10 +25,10 @@ if [[ $? == 0 ]]; then
     # Package control must be executed first in order for the rest to work
     . ./packages/setup.sh
 
-    cd "$project_dir"
+    cd "$curr_dir"
     find * -name "setup.sh" -not -path "packages*" | while read setup; do
         # NOTE: We have to cd back to maintain relative path
-        cd "$project_dir"
+        cd "$curr_dir"
 
         . ./$setup
     done

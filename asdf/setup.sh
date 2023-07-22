@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 
-asdf_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+############################################
+# Prepare environment
 
-# We have cd to directory to make sure find only searches in this directory
-cd "$asdf_dir"
+curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# NOTE: We have to cd first so we don't have to worry about relative path
+cd "$curr_dir"
+
 # Load predefined functions
 . ../utils/functions.sh
+
+############################################
+# Script body
+
 
 info "Installing asdf..."
 
@@ -35,7 +40,7 @@ fi
 
 find * -name "*.sh" -not -path "setup.sh" | while read setup; do
     # NOTE: We cd back to make sure the directory is correct
-    cd "$asdf_dir"
+    cd "$curr_dir"
 
     info "Running $setup..."
 

@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 
-crontab_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+############################################
+# Prepare environment
 
-# We have cd to directory to make sure find only searches in this directory
-cd "$crontab_dir"
+curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+cd "$curr_dir"
+
+############################################
+# Script body
+
 
 # Default values
 default_dst="crontab.txt"
