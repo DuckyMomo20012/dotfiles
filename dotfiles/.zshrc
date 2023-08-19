@@ -126,3 +126,4 @@ if command -v argocd >/dev/null 2>&1; then source <(argocd completion zsh); comp
 
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
