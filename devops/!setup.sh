@@ -15,7 +15,7 @@ cd "$devops_dir"
 
 
 # Install tools
-find * -name "*.sh" -not -path "setup.sh" | while read setup; do
+find * -name "*.sh" -not \( -path "setup.sh" -o -path "!setup.sh" \) | while read setup; do
     # NOTE: We cd back to make sure the directory is correct
     cd "$curr_dir"
 
