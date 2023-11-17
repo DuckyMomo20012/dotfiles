@@ -13,6 +13,16 @@ cd "$packages_dir"
 ############################################
 # Script body
 
+find * -name "*.sh" -not -path "setup.sh" | while read setup; do
+    # NOTE: We cd back to make sure the directory is correct
+    cd "$packages_dir"
+
+    info "Running $setup..."
+
+    . ./$setup
+done
+
+############################################
 
 COMMENT=\#*
 
@@ -40,13 +50,3 @@ find * -name "*.txt" -type f | while read fileName; do
     success "Finished installing \"$1\" packages."
 done
 
-############################################
-
-find * -name "*.sh" -not -path "setup.sh" | while read setup; do
-    # NOTE: We cd back to make sure the directory is correct
-    cd "$packages_dir"
-
-    info "Running $setup..."
-
-    . ./$setup
-done
