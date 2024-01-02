@@ -67,7 +67,7 @@ fi
 # Export current crontab to temporary file to append new jobs
 . ./export.sh
 
-pushLineNonDup "0 */12 */5 * * $crontab_dir/check-version/script.sh" "$crontab_dir/crontab.txt"
+# Add crontab jobs here
 
 . ./import.sh
 

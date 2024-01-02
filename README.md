@@ -140,8 +140,6 @@ make sure all dependency packages are installed.
 - [`asdf`](./asdf/): Setup the `asdf` tool version manager and install plugins.
 - [`completions`](./completions/): Setup `bash` completions.
 - [`crontab`](./crontab/): Setup cron jobs.
-  - [`crontab/check-version`](./crontab/check-version): Cron job to check for
-    new versions of packages.
 - [`devops`](./devops): Setup DevOps tools.
 - [`dotfiles`](./dotfiles/): Setup dotfiles.
 - [`gpg`](./gpg/): Scripts to encrypt files in the `private` directory or
