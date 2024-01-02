@@ -8,6 +8,6 @@ info "Installing NodeJS..."
 
 asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
 
-asdf install nodejs 20.5.0
+asdf install nodejs 20.10.0
 
-asdf global nodejs 20.5.0
+asdf global nodejs 20.10.0

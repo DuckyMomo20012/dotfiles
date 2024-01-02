@@ -8,6 +8,6 @@ info "Installing Golang..."
 
 asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
 
-asdf install golang 1.21.4
+asdf install golang 1.21.5
 
-asdf global golang 1.21.4
+asdf global golang 1.21.5
