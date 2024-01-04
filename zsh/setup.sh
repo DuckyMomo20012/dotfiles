@@ -27,9 +27,24 @@ git clone https://github.com/ohmyzsh/ohmyzsh.git "$ZSH"
 
 info "Installing powerlevel10k theme..."
 
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+git clone --depth 1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 
 # zsh-autosuggestions
 info "Installing zsh-autosuggestions..."
 
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+# zsh-autocomplete
+info "Installing zsh-autocomplete..."
+
+git clone --depth 1 "https://github.com/marlonrichert/zsh-autocomplete.git" $HOME/.oh-my-zsh/custom/plugins/zsh-autocomplete
+
+# zsh-syntax-highlighting
+info "Installing zsh-syntax-highlighting..."
+
+git clone --depth 1 "https://github.com/zsh-users/zsh-syntax-highlighting.git" $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+# zsh-history-substring-search
+info "Installing zsh-history-substring-search..."
+
+git clone --depth 1 "https://github.com/zsh-users/zsh-history-substring-search" $HOME/.oh-my-zsh/custom/plugins/zsh-history-substring-search
