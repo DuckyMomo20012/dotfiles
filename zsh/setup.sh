@@ -43,8 +43,3 @@ git clone --depth 1 "https://github.com/marlonrichert/zsh-autocomplete.git" $HOM
 info "Installing zsh-syntax-highlighting..."
 
 git clone --depth 1 "https://github.com/zsh-users/zsh-syntax-highlighting.git" $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-
-# zsh-history-substring-search
-info "Installing zsh-history-substring-search..."
-
-git clone --depth 1 "https://github.com/zsh-users/zsh-history-substring-search" $HOME/.oh-my-zsh/custom/plugins/zsh-history-substring-search
