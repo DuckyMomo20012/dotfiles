@@ -25,11 +25,11 @@ helm plugin install https://github.com/databus23/helm-diff
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Setup helm autocompletion for .bashrc..."
 
-    pushLineNonDup "if command -v helm >/dev/null 2>&1; then source <(helm completion bash); fi" "$HOME/.bashrc"
+    pushUniqueLine "if command -v helm >/dev/null 2>&1; then source <(helm completion bash); fi" "$HOME/.bashrc"
 fi
 
 if [[ -f "$HOME/.zshrc" ]]; then
     info "Setup helm autocompletion for .zshrc..."
 
-    pushLineNonDup "if command -v helm >/dev/null 2>&1; then source <(helm completion zsh); fi" "$HOME/.zshrc"
+    pushUniqueLine "if command -v helm >/dev/null 2>&1; then source <(helm completion zsh); fi" "$HOME/.zshrc"
 fi

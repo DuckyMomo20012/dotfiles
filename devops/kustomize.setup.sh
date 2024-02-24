@@ -24,11 +24,11 @@ sudo mv kustomize /usr/local/bin
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Setup kustomize autocompletion for .bashrc..."
 
-    pushLineNonDup "if command -v kustomize >/dev/null 2>&1; then source <(kustomize completion bash); compdef _kustomize kustomize; fi" "$HOME/.bashrc"
+    pushUniqueLine "if command -v kustomize >/dev/null 2>&1; then source <(kustomize completion bash); compdef _kustomize kustomize; fi" "$HOME/.bashrc"
 fi
 
 if [[ -f "$HOME/.zshrc" ]]; then
     info "Setup kustomize autocompletion for .zshrc..."
 
-    pushLineNonDup "if command -v kustomize >/dev/null 2>&1; then source <(kustomize completion zsh); compdef _kustomize kustomize; fi" "$HOME/.zshrc"
+    pushUniqueLine "if command -v kustomize >/dev/null 2>&1; then source <(kustomize completion zsh); compdef _kustomize kustomize; fi" "$HOME/.zshrc"
 fi

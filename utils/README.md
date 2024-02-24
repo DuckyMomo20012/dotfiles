@@ -176,7 +176,7 @@ This directory contains utility scripts used by this project.
 
     - `msg`: Expression to print to the terminal.
 
-- Function `pushLineNonDup`:
+- Function `pushUniqueLine`:
 
   - Description:
 
@@ -186,7 +186,7 @@ This directory contains utility scripts used by this project.
   - Usage:
 
     ```
-    pushLineNonDup <line> <file>
+    pushUniqueLine <line> <file>
     ```
 
     Parameters:

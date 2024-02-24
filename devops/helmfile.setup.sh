@@ -33,11 +33,11 @@ curl -sSL ${download_url} | tar -C $HOME/.local/bin -xz helmfile
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Setup helmfile autocompletion for .bashrc..."
 
-    pushLineNonDup "if command -v helmfile >/dev/null 2>&1; then source <(helmfile completion bash); fi" "$HOME/.bashrc"
+    pushUniqueLine "if command -v helmfile >/dev/null 2>&1; then source <(helmfile completion bash); fi" "$HOME/.bashrc"
 fi
 
 if [[ -f "$HOME/.zshrc" ]]; then
     info "Setup helmfile autocompletion for .zshrc..."
 
-    pushLineNonDup "if command -v helmfile >/dev/null 2>&1; then source <(helmfile completion zsh); fi" "$HOME/.zshrc"
+    pushUniqueLine "if command -v helmfile >/dev/null 2>&1; then source <(helmfile completion zsh); fi" "$HOME/.zshrc"
 fi

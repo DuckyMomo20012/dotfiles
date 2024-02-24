@@ -44,7 +44,7 @@ error() {
     tput el;
 }
 
-pushLineNonDup() {
+pushUniqueLine() {
     line="$1"
     file="$2"
 

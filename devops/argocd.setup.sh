@@ -24,11 +24,11 @@ rm argocd-linux-amd64
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Setup argocd autocompletion for .bashrc..."
 
-    pushLineNonDup "if command -v argocd >/dev/null 2>&1; then source <(argocd completion bash); compdef _argocd argocd; fi" "$HOME/.bashrc"
+    pushUniqueLine "if command -v argocd >/dev/null 2>&1; then source <(argocd completion bash); compdef _argocd argocd; fi" "$HOME/.bashrc"
 fi
 
 if [[ -f "$HOME/.zshrc" ]]; then
     info "Setup argocd autocompletion for .zshrc..."
 
-    pushLineNonDup "if command -v argocd >/dev/null 2>&1; then source <(argocd completion zsh); compdef _argocd argocd; fi" "$HOME/.zshrc"
+    pushUniqueLine "if command -v argocd >/dev/null 2>&1; then source <(argocd completion zsh); compdef _argocd argocd; fi" "$HOME/.zshrc"
 fi

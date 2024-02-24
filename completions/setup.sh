@@ -17,11 +17,11 @@ cd "$completion_dir"
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Adding completion to .bashrc..."
 
-    pushLineNonDup "source $completion_dir/npm.sh" "$HOME/.bashrc"
+    pushUniqueLine "source $completion_dir/npm.sh" "$HOME/.bashrc"
 fi
 
 if [[ -f "$HOME/.zshrc" ]]; then
     info "Adding completion to .zshrc..."
 
-    pushLineNonDup "source $completion_dir/npm.sh" "$HOME/.zshrc"
+    pushUniqueLine "source $completion_dir/npm.sh" "$HOME/.zshrc"
 fi

@@ -21,11 +21,11 @@ info "Installing brew..."
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Adding asdf to .bashrc..."
 
-    pushLineNonDup "eval \"\$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"" "$HOME/.bashrc"
+    pushUniqueLine "eval \"\$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"" "$HOME/.bashrc"
 fi
 
 if [[ -f "$HOME/.zshrc" ]]; then
     info "Adding asdf to .zshrc..."
 
-    pushLineNonDup "eval \"\$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"" "$HOME/.zshrc"
+    pushUniqueLine "eval \"\$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"" "$HOME/.zshrc"
 fi

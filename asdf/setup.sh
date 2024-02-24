@@ -22,15 +22,15 @@ git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.2
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Adding asdf to .bashrc..."
 
-    pushLineNonDup ". \$HOME/.asdf/asdf.sh" "$HOME/.bashrc"
-    pushLineNonDup ". \$HOME/.asdf/completions/asdf.bash" "$HOME/.bashrc"
+    pushUniqueLine ". \$HOME/.asdf/asdf.sh" "$HOME/.bashrc"
+    pushUniqueLine ". \$HOME/.asdf/completions/asdf.bash" "$HOME/.bashrc"
 fi
 
 if [[ -f "$HOME/.zshrc" ]]; then
     info "Adding asdf to .zshrc..."
 
-    pushLineNonDup ". \$HOME/.asdf/asdf.sh" "$HOME/.zshrc"
-    pushLineNonDup ". \$HOME/.asdf/completions/asdf.bash" "$HOME/.zshrc"
+    pushUniqueLine ". \$HOME/.asdf/asdf.sh" "$HOME/.zshrc"
+    pushUniqueLine ". \$HOME/.asdf/completions/asdf.bash" "$HOME/.zshrc"
 fi
 
 . $HOME/.asdf/asdf.sh
