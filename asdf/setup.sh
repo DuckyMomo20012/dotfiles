@@ -16,7 +16,7 @@ cd "$asdf_dir"
 
 info "Installing asdf..."
 
-git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.2
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf
 
 
 if [[ -f "$HOME/.bashrc" ]]; then

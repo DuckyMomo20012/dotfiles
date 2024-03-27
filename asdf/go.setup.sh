@@ -21,9 +21,9 @@ info "Installing Golang..."
 
 asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
 
-asdf install golang 1.21.5
+asdf install golang 1.22.1
 
-asdf global golang 1.21.5
+asdf global golang 1.22.1
 
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Adding asdf to .bashrc..."
