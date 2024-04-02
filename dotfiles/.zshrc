@@ -128,3 +128,5 @@ autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 . $HOME/.asdf/plugins/golang/set-env.zsh
+export GOPATH="/home/vinh/go"
+export PATH="$GOPATH/bin:$PATH"

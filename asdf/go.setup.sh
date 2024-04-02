@@ -29,10 +29,16 @@ if [[ -f "$HOME/.bashrc" ]]; then
     info "Adding asdf to .bashrc..."
 
     pushUniqueLine ". \$HOME/.asdf/plugins/golang/set-env.zsh" "$HOME/.bashrc"
+
+    pushUniqueLine "export GOPATH=\"$HOME/go\"" "$HOME/.bashrc"
+    pushUniqueLine "export PATH=\"\$GOPATH/bin:\$PATH\"" "$HOME/.bashrc"
 fi
 
 if [[ -f "$HOME/.zshrc" ]]; then
     info "Adding asdf to .zshrc..."
 
     pushUniqueLine ". \$HOME/.asdf/plugins/golang/set-env.zsh" "$HOME/.zshrc"
+
+    pushUniqueLine "export GOPATH=\"$HOME/go\"" "$HOME/.zshrc"
+    pushUniqueLine "export PATH=\"\$GOPATH/bin:\$PATH\"" "$HOME/.zshrc"
 fi
