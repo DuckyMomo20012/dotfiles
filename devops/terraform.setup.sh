@@ -21,5 +21,5 @@ sudo apt update
 sudo apt-get install terraform
 
 # Setup bash completion
-terraform -install-autocomplete
+terraform -install-autocomplete >/dev/null 2>&1
 
