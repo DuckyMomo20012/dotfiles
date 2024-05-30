@@ -1,0 +1,14 @@
+{
+  "entries": {
+  },
+  "system": {
+    "linux": {
+      "Ubuntu 23.10 (mantic)": {
+        "HOMEBREW_VERSION": "4.3.2",
+        "HOMEBREW_PREFIX": "/home/linuxbrew/.linuxbrew",
+        "Homebrew/homebrew-core": "api",
+        "GCC": "13.2.0"
+      }
+    }
+  }
+}

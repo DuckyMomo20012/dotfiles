@@ -29,3 +29,8 @@ if [[ -f "$HOME/.zshrc" ]]; then
 
     pushUniqueLine "eval \"\$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"" "$HOME/.zshrc"
 fi
+
+
+info "Installing brew packages from Brewfile..."
+
+brew bundle --file="$brew_dir/Brewfile"
