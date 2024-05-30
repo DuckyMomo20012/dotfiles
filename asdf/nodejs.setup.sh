@@ -8,6 +8,6 @@ info "Installing NodeJS..."
 
 asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
 
-asdf install nodejs 21.7.1
+asdf install nodejs 22.2.0
 
-asdf global nodejs 21.7.1
+asdf global nodejs 22.2.0

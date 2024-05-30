@@ -8,14 +8,14 @@ info "Installing protoc..."
 
 asdf plugin-add protoc https://github.com/paxosglobal/asdf-protoc.git
 
-asdf install protoc 25.1
+asdf install protoc 27.0
 
-asdf global protoc 25.1
+asdf global protoc 27.0
 
 info "Installing buf..."
 
 asdf plugin-add buf https://github.com/truepay/asdf-buf
 
-asdf install buf 1.28.1
+asdf install buf 1.32.2
 
-asdf global buf 1.28.1
+asdf global buf 1.32.2
