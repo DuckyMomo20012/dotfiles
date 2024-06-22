@@ -16,6 +16,6 @@ info "Installing buf..."
 
 asdf plugin-add buf https://github.com/truepay/asdf-buf
 
-asdf install buf 1.32.2
+asdf install buf 1.33.0
 
-asdf global buf 1.32.2
+asdf global buf 1.33.0
