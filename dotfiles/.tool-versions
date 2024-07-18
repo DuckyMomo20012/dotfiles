@@ -1,4 +1,4 @@
-nodejs 22.2.0
+nodejs 20.15.1
 golang 1.22.3
 buf 1.33.0
 protoc 27.0
