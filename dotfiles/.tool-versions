@@ -2,3 +2,4 @@ nodejs 20.15.1
 golang 1.22.3
 buf 1.33.0
 protoc 27.0
+java adoptopenjdk-17.0.12+7
