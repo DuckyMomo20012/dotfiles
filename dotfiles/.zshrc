@@ -114,7 +114,6 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.bash_profile ]] || source ~/.bash_profile
 . $HOME/.asdf/asdf.sh
 . $HOME/.asdf/completions/asdf.bash
-source /home/vinh/dotfiles/completions/npm.sh
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.npm-global/bin:$PATH
 if command -v kubectl >/dev/null 2>&1; then source <(kubectl completion zsh); fi
