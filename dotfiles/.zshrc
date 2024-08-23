@@ -127,7 +127,7 @@ autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 . $HOME/.asdf/plugins/golang/set-env.zsh
-export PATH=$(asdf where golang)/bin:$PATH
+export PATH=$(asdf where golang)/packages/bin:$PATH
 export ANDROID_HOME=$HOME/Android/Sdk
 export PATH=$ANDROID_HOME/emulator:$PATH
 export PATH=$ANDROID_HOME/platform-tools:$PATH
