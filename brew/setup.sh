@@ -18,6 +18,8 @@ info "Installing brew..."
 /bin/bash -c "NONINTERACTIVE=1 $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Adding asdf to .bashrc..."
 
