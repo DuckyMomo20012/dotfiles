@@ -22,11 +22,11 @@ if [[ $? == 0 ]]; then
     # Whatever you want to do with sudo
     sudo apt-get update
 
-    # Package control must be executed first in order for the rest to work
-    . ./packages/setup.sh
-
+    # asdf must be executed first in order for the rest to work
+    . ./asdf/setup.sh
+    
     cd "$project_dir"
-    find * -name "setup.sh" -not -path "packages*" | while read setup; do
+    find * -name "setup.sh" -not -path "asdf*" | while read setup; do
         # NOTE: We have to cd back to maintain relative path
         cd "$project_dir"
 
