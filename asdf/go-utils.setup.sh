@@ -6,16 +6,16 @@ info() {
 
 info "Installing protoc..."
 
-asdf plugin-add protoc https://github.com/paxosglobal/asdf-protoc.git
+$HOME/.asdf/bin/asdf plugin add protoc https://github.com/paxosglobal/asdf-protoc.git
 
-asdf install protoc 29.3
+$HOME/.asdf/bin/asdf install protoc 29.3
 
-asdf global protoc 29.3
+$HOME/.asdf/bin/asdf set --home protoc 29.3
 
 info "Installing buf..."
 
-asdf plugin-add buf https://github.com/truepay/asdf-buf
+$HOME/.asdf/bin/asdf plugin add buf https://github.com/truepay/asdf-buf
 
-asdf install buf 1.49.0
+$HOME/.asdf/bin/asdf install buf 1.49.0
 
-asdf global buf 1.49.0
+$HOME/.asdf/bin/asdf set --home buf 1.49.0

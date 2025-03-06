@@ -6,8 +6,10 @@ info() {
 
 info "Installing NodeJS..."
 
-asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+$HOME/.asdf/bin/asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
 
-asdf install nodejs 22.13.0
+$HOME/.asdf/bin/asdf install nodejs 22.13.0
 
-asdf global nodejs 22.13.0
+$HOME/.asdf/bin/asdf set --home nodejs 22.13.0
+
+$HOME/.asdf/bin/asdf env node npm install -g npm@latest pnpm@latest yarn@latest typescript@latest

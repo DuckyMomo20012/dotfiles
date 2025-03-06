@@ -19,16 +19,16 @@ info() {
 
 info "Installing Golang..."
 
-asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
+$HOME/.asdf/bin/asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
 
-asdf install golang 1.23.4
+$HOME/.asdf/bin/asdf install golang 1.23.4
 
-asdf global golang 1.23.4
+$HOME/.asdf/bin/asdf set --home golang 1.23.4
 
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Adding asdf to .bashrc..."
 
-    pushUniqueLine ". \$HOME/.asdf/plugins/golang/set-env.zsh" "$HOME/.bashrc"
+    pushUniqueLine ". \$HOME/.asdf/plugins/golang/set-env.bash" "$HOME/.bashrc"
 
     pushUniqueLine "export PATH=\"\$(asdf where golang)/packages/bin\":\$PATH" "$HOME/.bashrc"
 fi

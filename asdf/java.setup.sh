@@ -19,11 +19,11 @@ info() {
 
 info "Installing Java..."
 
-asdf plugin add java https://github.com/halcyon/asdf-java.git
+$HOME/.asdf/bin/asdf plugin add java https://github.com/halcyon/asdf-java.git
 
-asdf install java adoptopenjdk-jre-21.0.5+11.0.LTS
+$HOME/.asdf/bin/asdf install java adoptopenjdk-jre-21.0.5+11.0.LTS
 
-asdf global java adoptopenjdk-jre-21.0.5+11.0.LTS
+$HOME/.asdf/bin/asdf set --home java adoptopenjdk-jre-21.0.5+11.0.LTS
 
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Adding asdf to .bashrc..."
