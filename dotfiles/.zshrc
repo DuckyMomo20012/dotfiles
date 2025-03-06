@@ -112,8 +112,9 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 [[ ! -f ~/.bash_profile ]] || source ~/.bash_profile
-. $HOME/.asdf/asdf.sh
-. $HOME/.asdf/completions/asdf.bash
+export PATH=$HOME/.asdf/shims:$PATH
+export PATH=$HOME/.asdf/bin:$PATH
+if command -v asdf >/dev/null 2>&1; then source <(asdf completion zsh); fi
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.npm-global/bin:$PATH
 if command -v kubectl >/dev/null 2>&1; then source <(kubectl completion zsh); fi
@@ -128,7 +129,4 @@ complete -o nospace -C /usr/bin/terraform terraform
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 . $HOME/.asdf/plugins/golang/set-env.zsh
 export PATH=$(asdf where golang)/packages/bin:$PATH
-export ANDROID_HOME=$HOME/Android/Sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/platform-tools
 . $HOME/.asdf/plugins/java/set-java-home.zsh
