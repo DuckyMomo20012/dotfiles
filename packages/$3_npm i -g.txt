@@ -1,5 +1,0 @@
-npm
-yarn
-pnpm
-zx
-typescript
