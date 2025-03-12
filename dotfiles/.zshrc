@@ -130,3 +130,5 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 . $HOME/.asdf/plugins/golang/set-env.zsh
 export PATH=$(asdf where golang)/packages/bin:$PATH
 . $HOME/.asdf/plugins/java/set-java-home.zsh
+export ANDROID_HOME=~/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools
