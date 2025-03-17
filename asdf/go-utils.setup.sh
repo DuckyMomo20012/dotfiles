@@ -12,6 +12,8 @@ $HOME/.asdf/bin/asdf install protoc 29.3
 
 $HOME/.asdf/bin/asdf set --home protoc 29.3
 
+$HOME/.asdf/bin/asdf reshim protoc 29.3
+
 info "Installing buf..."
 
 $HOME/.asdf/bin/asdf plugin add buf https://github.com/truepay/asdf-buf
@@ -19,3 +21,5 @@ $HOME/.asdf/bin/asdf plugin add buf https://github.com/truepay/asdf-buf
 $HOME/.asdf/bin/asdf install buf 1.49.0
 
 $HOME/.asdf/bin/asdf set --home buf 1.49.0
+
+$HOME/.asdf/bin/asdf reshim buf 1.49.0

@@ -25,6 +25,8 @@ $HOME/.asdf/bin/asdf install golang 1.23.4
 
 $HOME/.asdf/bin/asdf set --home golang 1.23.4
 
+$HOME/.asdf/bin/asdf reshim golang 1.23.4
+
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Adding asdf to .bashrc..."
 

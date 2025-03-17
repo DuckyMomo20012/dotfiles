@@ -12,4 +12,6 @@ $HOME/.asdf/bin/asdf install nodejs 22.13.0
 
 $HOME/.asdf/bin/asdf set --home nodejs 22.13.0
 
+$HOME/.asdf/bin/asdf reshim nodejs 22.13.0
+
 $HOME/.asdf/bin/asdf env node npm install -g npm@latest pnpm@latest yarn@latest typescript@latest
