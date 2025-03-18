@@ -2,4 +2,4 @@ nodejs 22.13.0
 golang 1.23.4
 buf 1.49.0
 protoc 29.3
-java adoptopenjdk-jre-21.0.5+11.0.LTS
+java adoptopenjdk-17.0.14+7
