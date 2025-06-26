@@ -30,7 +30,7 @@ $HOME/.asdf/bin/asdf reshim golang 1.23.4
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Adding asdf to .bashrc..."
 
-    pushUniqueLine ". \$HOME/.asdf/plugins/golang/set-env.bash" "$HOME/.bashrc"
+    pushUniqueLine ". \${ASDF_DATA_DIR:-\$HOME/.asdf}/plugins/golang/set-env.bash" "$HOME/.bashrc"
 
     pushUniqueLine "export PATH=\"\$(asdf where golang)/packages/bin\":\$PATH" "$HOME/.bashrc"
 fi
@@ -38,7 +38,7 @@ fi
 if [[ -f "$HOME/.zshrc" ]]; then
     info "Adding asdf to .zshrc..."
 
-    pushUniqueLine ". \$HOME/.asdf/plugins/golang/set-env.zsh" "$HOME/.zshrc"
+    pushUniqueLine ". \${ASDF_DATA_DIR:-\$HOME/.asdf}/plugins/golang/set-env.zsh" "$HOME/.zshrc"
 
     pushUniqueLine "export PATH=\$(asdf where golang)/packages/bin:\$PATH" "$HOME/.zshrc"
 fi

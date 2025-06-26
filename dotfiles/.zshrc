@@ -112,8 +112,8 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 [[ ! -f ~/.bash_profile ]] || source ~/.bash_profile
-export PATH=$HOME/.asdf/shims:$PATH
 export PATH=$HOME/.asdf/bin:$PATH
+export PATH=${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH
 if command -v asdf >/dev/null 2>&1; then source <(asdf completion zsh); fi
 export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOME/.npm-global/bin:$PATH
@@ -127,7 +127,7 @@ if command -v argocd >/dev/null 2>&1; then source <(argocd completion zsh); comp
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-. $HOME/.asdf/plugins/golang/set-env.zsh
+. ${ASDF_DATA_DIR:-$HOME/.asdf}/plugins/golang/set-env.zsh
 export PATH=$(asdf where golang)/packages/bin:$PATH
 . $HOME/.asdf/plugins/java/set-java-home.zsh
 export ANDROID_HOME=~/Android/Sdk

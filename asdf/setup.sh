@@ -31,8 +31,8 @@ rm "$output_tar"
 if [[ -f "$HOME/.bashrc" ]]; then
     info "Adding asdf to .bashrc..."
 
-    pushUniqueLine "export PATH=${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH" "$HOME/.bashrc"
     pushUniqueLine "export PATH=\$HOME/.asdf/bin:\$PATH" "$HOME/.bashrc"
+    pushUniqueLine "export PATH=\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH" "$HOME/.bashrc"
 
     info "Setup asdf autocompletion for .bashrc..."
 
@@ -42,8 +42,8 @@ fi
 if [[ -f "$HOME/.zshrc" ]]; then
     info "Adding asdf to .zshrc..."
 
-    pushUniqueLine "export PATH=${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH" "$HOME/.zshrc"
     pushUniqueLine "export PATH=\$HOME/.asdf/bin:\$PATH" "$HOME/.zshrc"
+    pushUniqueLine "export PATH=\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH" "$HOME/.zshrc"
 
     info "Setup asdf autocompletion for .zshrc..."
 
