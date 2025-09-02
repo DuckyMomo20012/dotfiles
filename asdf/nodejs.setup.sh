@@ -8,10 +8,10 @@ info "Installing NodeJS..."
 
 $HOME/.asdf/bin/asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
 
-$HOME/.asdf/bin/asdf install nodejs 22.16.0
+$HOME/.asdf/bin/asdf install nodejs lts
 
-$HOME/.asdf/bin/asdf set --home nodejs 22.16.0
+$HOME/.asdf/bin/asdf set --home nodejs lts
 
-$HOME/.asdf/bin/asdf reshim nodejs 22.16.0
+$HOME/.asdf/bin/asdf reshim nodejs lts
 
-$HOME/.asdf/bin/asdf env node npm install -g npm@latest pnpm@latest yarn@latest typescript@latest
+$HOME/.asdf/bin/asdf env node -- npm install -g npm@latest pnpm@latest yarn@latest typescript@latest
