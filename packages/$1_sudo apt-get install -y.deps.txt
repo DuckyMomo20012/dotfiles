@@ -1,9 +1,0 @@
-git
-curl
-make
-build-essential
-npm
-gnupg
-
-# For poetry
-python3-venv
