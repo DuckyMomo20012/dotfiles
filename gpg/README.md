@@ -9,16 +9,10 @@ export/import gpg keys.
 
 ## Usage
 
-All of these scripts are just wrappers around functions in
-[utils/crypto.sh](../utils/crypto.sh).
-
-- File `dedot.sh`: Decrypted encrypted directory and run script files.
-
+- File `dedot.ts`: Decrypted encrypted directory and run script files.
   - Description:
-
     - Decrypt file from `src` (encrypted by `gpg`), e.g., `encryped.tar.gz.gpg`,
       to `encrypted.tar.gz`, then extract it to `dst`.
-
     - After extracting, it will remove the tar file, e.g, `encrypted.tar.gz`.
     - Finally, it will **find all `setup.sh` files and run it**.
 
@@ -28,24 +22,17 @@ All of these scripts are just wrappers around functions in
   - Usage:
 
     ```
-    ./dedot.sh [-f <file> | -d <path> | -p <pass> | -h]
-    ```
+    Usage: bun dedot.ts [options]
 
     Options:
+      -h, --help          Show this help message and exit
+      -f, --file <filename>  Specify the filename to decrypt (default: /home/vinh/dotfiles/private/encrypted.tar.gz.gpg)
+      -d, --dest <directory>  Specify the destination directory for decrypted files (default: /home/vinh/dotfiles/private)
+      -p, --passphrase <passphrase>  Specify the passphrase for decryption (default: from environment variable GPG_PASSPHRASE)
+    ```
 
-    - `-f <file>` (src): The source archive file (encrypted by `gpg`) to
-      decrypt. The file name should have the extension `.tar.gz.gpg` at the end.
-      Default:`dotfiles/private/encrypted.tar.gz.gpg`.
-    - `-d <path>` (dst): The destination directory to extract files to, create
-      if not exist. Default: `dotfiles/private`.
-    - `-p <pass>` (pass): The passphrase to decrypt the archive file. If not
-      provided, it will be prompted.
-    - `-h` (help): Show help message.
-
-- File `endot.sh`: Archive and encrypt directory.
-
+- File `endot.ts`: Archive and encrypt directory.
   - Description:
-
     - Archive the `src` directory to a tar file (`dstTarFile.gpg`), then encrypt
       it with `gpg` using `email`, which is `gpg` user id.
     - Archive file will exclude `setup.sh`, markdown files `(*.md)`, files with
@@ -56,28 +43,17 @@ All of these scripts are just wrappers around functions in
   - Usage:
 
     ```
-    ./endot.sh [-e <email> | -d <path> | -f <file> | -h]
-    ```
+    Usage: bun endot.ts [options]
 
     Options:
+      -h, --help          Show this help message and exit
+      -e, --email <email>  Specify the email address for GPG key (default: example@gmail.com)
+      -f, --file <filename>  Specify the output encrypted filename (default: /home/vinh/dotfiles/private/encrypted.tar.gz.gpg)
+      -d, --dest <directory>  Specify the destination directory to encrypt files (default: /home/vinh/dotfiles/private)
+    ```
 
-    - `-e <email>` (email): The recipient of a public-key encrypted document.
-      The parameter name is either the name of the individual or the e-mail
-      address of the individual to whom you are sending the message. Default:
-      `tienvinh.duong4@gmail.com`.
-    - `-d <path>` (src): The directory will be archived and encrypted. Default:
-      `dotfiles/private`.
-    - `-f <file>` (dstTarFile): The file name of the tar file that will be
-      encrypted. The file name **MUST have the extension `.tar.gz` at the end**.
-      The encrypted file will be created with the name `dstTarFile.gpg` **in the
-      directory extracted from `dstTarFile`**. Default:
-      `dotfiles/private/encrypted.tar.gz`.
-    - `-h` (help): Show help message.
-
-- File `export.sh`: Backup GPG keys.
-
+- File `export.ts`: Backup GPG keys.
   - Description:
-
     - Export `gpg` secret keys to the file.
 
     > **Note**: This will export all necessary information to restore the
@@ -91,23 +67,16 @@ All of these scripts are just wrappers around functions in
   - Usage:
 
     ```
-    ./export.sh [-e <email> | -f <file> | -h]
-    ```
+    Usage: bun export.ts [options]
 
     Options:
-
-    - `-e <email>` (email): The recipient of a public-key encrypted document.
-      The parameter name is either the name of the individual or the e-mail
-      address of the individual to whom you are sending the message. Default:
-      `tienvinh.duong4@gmail.com`.
-    - `-f <file>` (backupFileName): The file name of exported gpg keys. Default:
-      `secret.asc`.
-    - `-h` (help): Show help message.
+      -h, --help          Show this help message and exit
+      -e, --email <email> Specify the email address to export the GPG key (default: example@gmail.com)
+      -f, --file <filename>  Specify the destination filename to export the GPG key (default: secret.asc)
+    ```
 
 - File `import.sh`: Restore GPG keys.
-
   - Description:
-
     - Import and restore `gpg` keys from the file.
 
     > **Note**: `gpg` prompt will be suppressed when importing keys.
@@ -115,11 +84,10 @@ All of these scripts are just wrappers around functions in
   - Usage:
 
     ```
-    ./import.sh [-f <file> | -h]
-    ```
+    Usage: bun import.ts [options]
 
     Options:
-
-    - `-f <file>` (backupFileName): The file name of exported gpg keys **to
-      import**. Default: `secret.asc`.
-    - `-h` (help): Show help message.
+      -h, --help          Show this help message and exit
+      -e, --email <email> Specify the email address to import the GPG key (default: example@gmail.com)
+      -f, --file <filename>  Specify the filename to import the GPG key (default: secret.asc)
+    ```
