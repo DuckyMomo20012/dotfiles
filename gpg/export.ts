@@ -3,7 +3,7 @@ import { exists, mkdir } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import process from 'node:process'
 import { parseArgs } from 'node:util'
-import { gpgExport } from '../scripts/utils'
+import { gpgExport } from '../lib/utils'
 
 const DEFAULT_EMAIL = 'example@gmail.com'
 const DEFAULT_FILENAME = 'secret.asc'

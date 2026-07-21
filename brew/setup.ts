@@ -1,20 +1,26 @@
 import { exists } from 'node:fs/promises'
+import { join } from 'node:path'
+import process from 'node:process'
 import { $ } from 'bun'
-import { appendUniqueLine, logger } from '../scripts/utils'
+import { brewBinPath } from '../lib/constants'
+import { appendUniqueLine, logger } from '../lib/utils'
 
 logger.info('Setting up brew...')
 
-await $`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+await $`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`.env({
+  ...process.env,
+  NONINTERACTIVE: '1',
+})
 
-if (await (exists('~/.bashrc'))) {
+if (await (exists(`${process.env.HOME}/.bashrc`))) {
   logger.info('Adding brew to ~/.bashrc')
-  await appendUniqueLine(`export PATH="/home/linuxbrew/.linuxbrew/bin:\$PATH"`, '~/.bashrc')
+  await appendUniqueLine(`export PATH=/home/linuxbrew/.linuxbrew/bin:\$PATH`, `${process.env.HOME}/.bashrc`)
 }
 
-if (await (exists('~/.zshrc'))) {
+if (await (exists(`${process.env.HOME}/.zshrc`))) {
   logger.info('Adding brew to ~/.zshrc')
-  await appendUniqueLine(`export PATH="/home/linuxbrew/.linuxbrew/bin:\$PATH"`, '~/.zshrc')
+  await appendUniqueLine(`export PATH=/home/linuxbrew/.linuxbrew/bin:\$PATH`, `${process.env.HOME}/.zshrc`)
 }
 
 logger.info('Installing brew packages from Brewfile...')
-await $`brew bundle --file=./Brewfile`
+await $`${brewBinPath} bundle --file=${join(__dirname, './Brewfile')}`

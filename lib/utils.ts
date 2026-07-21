@@ -4,6 +4,7 @@ import { basename, dirname, join, normalize } from 'node:path'
 import process from 'node:process'
 import { styleText } from 'node:util'
 import { $ } from 'bun'
+import { bunBinPath } from './constants'
 
 export const logger = {
   info: (msg: string) => console.log(styleText('cyan', msg)),
@@ -82,23 +83,27 @@ export async function startSudo() {
   return async () => void cleanup('manual stop')
 }
 
-export async function symlinkDotfileDir(sourceDir: string, targetDir: string) {
+export async function symlinkDotfileDir(sourceDir: string, targetDir: string, ignorePath?: string) {
+  ignorePath = normalize(ignorePath ?? '')
+
   const files = (await readdir(sourceDir, { withFileTypes: true, recursive: true, encoding: 'utf-8' }))
   // NOTE: Filter out .setup.ts files and any files starting with '!' or ending
   // with '.md' to avoid linking unnecessary files.
   const dotFiles = files.filter(
-    file => file.isFile() && !file.name.startsWith('!') && !file.name.endsWith('.md') && !file.name.includes('.setup'),
+    file => file.isFile() && !file.name.startsWith('!') && !file.name.endsWith('.md') && !file.name.includes('setup'),
   )
 
   for (const file of dotFiles) {
-    const sourcePath = join(sourceDir, file.name)
-    const targetPath = join(targetDir, file.name)
+    const sourcePath = join(sourceDir, file.parentPath.replace(ignorePath, ''), file.name)
+    const targetPath = join(targetDir, file.parentPath.replace(ignorePath, ''), file.name)
 
     if (await exists(targetPath)) {
-      const backupPath = join(targetDir, `${file.name}.backup`)
+      const backupPath = join(targetDir, file.parentPath.replace(ignorePath, ''), `${file.name}.backup`)
       logger.warn(`Backing up existing file ${targetPath} to ${backupPath}`)
       await Bun.write(backupPath, await Bun.file(targetPath).text())
     }
+
+    await $`mkdir -p ${dirname(targetPath)}`
 
     await $`ln -sf ${sourcePath} ${targetPath}`
     logger.success(`Linked ${sourcePath} to ${targetPath}`)
@@ -176,7 +181,7 @@ export async function runSetupFilesInDir(dir: string, options: {
 
     for (const file of filteredFiles) {
       logger.info(`Running setup file: ${file}`)
-      const proc = Bun.spawn(['bun', 'run', file], { stdout: 'inherit', stderr: 'inherit' })
+      const proc = Bun.spawn([bunBinPath, 'run', file], { stdout: 'inherit', stderr: 'inherit' })
       const status = await proc.exited
 
       if (status !== 0) {
@@ -198,14 +203,14 @@ export async function gpgDecrypt(
   // file without a passphrase. This is useful for files that are not encrypted
   // with a passphrase or for testing purposes. However, it is recommended to
   // always use a passphrase for sensitive files to ensure their security.
-  if (passphrase !== undefined) {
-    $`gpg --batch --yes --decrypt --output ${dest} ${filename}`.catch((err) => {
+  if (passphrase === undefined) {
+    await $`gpg --batch --yes --output ${dest} --decrypt ${filename}`.catch((err) => {
       logger.error(`Failed to decrypt ${filename}: ${err}`)
       process.exit(1)
     })
   }
   else {
-    $`gpg --batch --yes --passphrase ${passphrase} --decrypt --output ${dest} ${filename}`.catch(
+    await $`gpg --batch --yes --pinentry-mode loopback --passphrase ${passphrase} --output ${dest} --decrypt ${filename}`.catch(
       (err) => {
         console.error(`Failed to decrypt ${filename}: ${err}`)
         process.exit(1)
@@ -221,7 +226,7 @@ export async function gpgEncrypt(
   dest: string,
 ) {
   logger.info(`Encrypting ${dest} to ${filename} for ${email}...`)
-  $`gpg --batch --yes --recipient ${email} --output ${filename} --encrypt ${filename}`.catch(
+  await $`gpg --batch --yes --trust-model always --recipient ${email} --output ${filename} --encrypt ${dest}`.catch(
     (err) => {
       logger.error(`Failed to encrypt ${filename}: ${err}`)
       process.exit(1)
@@ -236,7 +241,7 @@ export async function gpgExport(
   filename: string,
 ) {
   logger.info(`Exporting GPG key for ${email} to ${filename}...`)
-  $`gpg --armor --export ${email} --output ${filename}`.catch((err) => {
+  await $`gpg --batch --yes --export-options backup --export-secret-keys --output ${filename} ${email}`.catch((err) => {
     logger.error(`Failed to export GPG key for ${email} to ${filename}: ${err}`)
     process.exit(1)
   })
@@ -248,7 +253,7 @@ export async function gpgImport(
   filename: string,
 ) {
   logger.info(`Importing GPG key for ${email} from ${filename}...`)
-  $`gpg --batch --import-options restore --import ${filename}`.catch((err) => {
+  await $`gpg --batch --yes --import-options restore --import ${filename}`.catch((err) => {
     logger.error(`Failed to import GPG key for ${email} from ${filename}: ${err}`)
     process.exit(1)
   })

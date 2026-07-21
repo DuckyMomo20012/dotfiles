@@ -1,4 +1,4 @@
-import { logger, prettyAptInstall } from '../scripts/utils'
+import { logger, prettyAptInstall } from '../lib/utils'
 
 logger.info('Installing APT packages...')
 

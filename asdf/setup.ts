@@ -1,7 +1,7 @@
 import { exists } from 'node:fs/promises'
 import process from 'node:process'
 import { $ } from 'bun'
-import { appendUniqueLine, logger } from '../scripts/utils'
+import { appendUniqueLine, logger } from '../lib/utils'
 
 logger.info('Setting up asdf...')
 
@@ -21,20 +21,20 @@ await $`mkdir -p ~/.asdf/bin`
 await $`curl -L ${downloadUrl} | tar xz -C ~/.asdf/bin`
 
 // NOTE: Add asdf to the shell configuration file
-if (await (exists('~/.bashrc'))) {
+if (await (exists(`${process.env.HOME}/.bashrc`))) {
   logger.info('Adding asdf to ~/.bashrc')
-  await appendUniqueLine(`export PATH=\$HOME/.asdf/bin:\$PATH" "$HOME/.bashrc"`, '~/.bashrc')
-  await appendUniqueLine(`export PATH=\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH`, '~/.bashrc')
+  await appendUniqueLine(`export PATH=\$HOME/.asdf/bin:\$PATH`, `${process.env.HOME}/.bashrc`)
+  await appendUniqueLine(`export PATH=\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH`, `${process.env.HOME}/.bashrc`)
 
   logger.info('Setup asdf autocompletion for bash')
-  await appendUniqueLine(`if command -v asdf >/dev/null 2>&1; then source <(asdf completion bash); fi`, '~/.bashrc')
+  await appendUniqueLine(`if command -v asdf >/dev/null 2>&1; then source <(asdf completion bash); fi`, `${process.env.HOME}/.bashrc`)
 }
 
-if (await (exists('~/.zshrc'))) {
+if (await (exists(`${process.env.HOME}/.zshrc`))) {
   logger.info('Adding asdf to ~/.zshrc')
-  await appendUniqueLine(`export PATH=\$HOME/.asdf/bin:\$PATH" "$HOME/.zshrc"`, '~/.zshrc')
-  await appendUniqueLine(`export PATH=\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH`, '~/.zshrc')
+  await appendUniqueLine(`export PATH=\$HOME/.asdf/bin:\$PATH`, `${process.env.HOME}/.zshrc`)
+  await appendUniqueLine(`export PATH="\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH`, `${process.env.HOME}/.zshrc`)
 
   logger.info('Setup asdf autocompletion for zsh')
-  await appendUniqueLine(`if command -v asdf >/dev/null 2>&1; then source <(asdf completion zsh); fi`, '~/.zshrc')
+  await appendUniqueLine(`if command -v asdf >/dev/null 2>&1; then source <(asdf completion zsh); fi`, `${process.env.HOME}/.zshrc`)
 }

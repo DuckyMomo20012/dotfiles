@@ -1,13 +1,14 @@
 import type { ParseArgsOptionsConfig } from 'node:util'
-import { exists } from 'node:fs/promises'
-import { join, resolve } from 'node:path'
+import { exists, mkdtemp, rm } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { basename, join, resolve } from 'node:path'
 import process from 'node:process'
 import { parseArgs } from 'node:util'
 import { $ } from 'bun'
-import { gpgEncrypt, logger } from '../scripts/utils'
+import { gpgEncrypt, logger } from '../lib/utils'
 
 const DEFAULT_EMAIL = 'example@gmail.com'
-const DEFAULT_FILENAME = join(resolve(__dirname, '../private'), 'encrypted.tar.gz.gpg')
+const DEFAULT_FILENAME = 'encrypted.tar.gz.gpg'
 const DEFAULT_DEST = resolve(__dirname, '../private')
 
 const helpMessage = `
@@ -63,15 +64,30 @@ if (!(await exists(dest))) {
   process.exit(1)
 }
 
+if (!filename.endsWith('.tar.gz.gpg')) {
+  logger.error(`Filename ${filename} must end with ".tar.gz.gpg".`)
+  process.exit(1)
+}
+
 // NOTE: Compress the files in the destination directory before encrypting them.
 // This is to filter out markdown files and files starting with "!" in the
 // destination directory, and to ensure that sensitive information is not
 // exposed in plaintext.
-$`tar --exclude=${filename} --exclude="*.md" --exclude="!*" --exclude="*gpg" -czf ${filename} -C ${dest} .`.catch(
-  (err) => {
-    logger.error(`Failed to compress files in ${dest}: ${err}`)
-    process.exit(1)
-  },
-)
+const encryptedFile = join(resolve(__dirname, '../private'), filename)
+const tempDir = await mkdtemp(join(tmpdir(), 'endot-'))
+const tarFile = join(tempDir, filename.replace(/\.gpg$/, ''))
+const tarFileName = basename(tarFile)
 
-await gpgEncrypt(email, filename, dest)
+try {
+  await $`tar --exclude=${tarFileName} --exclude="*.md" --exclude="!*" --exclude="*gpg" -czf ${tarFile} -C ${dest} .`
+  await gpgEncrypt(email, encryptedFile, tarFile)
+}
+catch (err) {
+  // eslint-disable-next-line ts/restrict-template-expressions
+  logger.error(`Failed to compress or encrypt files in ${dest}: ${err}`)
+  process.exit(1)
+}
+finally {
+  logger.info(`Deleting temporary tar file ${tarFile}...`)
+  await rm(tempDir, { recursive: true, force: true })
+}

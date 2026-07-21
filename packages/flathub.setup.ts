@@ -1,5 +1,5 @@
 import { $ } from 'bun'
-import { logger, prettyAptInstall } from '../scripts/utils'
+import { logger, prettyAptInstall } from '../lib/utils'
 
 logger.info('Installing Flatpak and Flathub...')
 
@@ -11,4 +11,4 @@ await prettyAptInstall(`sudo apt-get install -y flatpak`)
 
 await prettyAptInstall(`sudo apt-get install -y gnome-software-plugin-flatpak`)
 
-await $`flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo`
+await $`sudo flatpak remote-add --if-not-exists --system flathub https://flathub.org/repo/flathub.flatpakrepo`

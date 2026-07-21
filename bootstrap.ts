@@ -2,7 +2,8 @@ import type { ParseArgsOptionsConfig } from 'node:util'
 import { join, resolve } from 'node:path'
 import process from 'node:process'
 import { parseArgs } from 'node:util'
-import { gpgDecrypt, gpgImport, logger, runSetupFilesInDir, symlinkDotfileDir } from './scripts/utils'
+import { $ } from 'bun'
+import { gpgDecrypt, gpgImport, logger, runSetupFilesInDir, symlinkDotfileDir } from './lib/utils'
 
 const DEfAULT_DEDOT = false
 
@@ -49,25 +50,23 @@ logger.info('Running setup files...')
 // in the "asdf" directory
 await runSetupFilesInDir('.', { runMainSetupOnly: false, ignores: ['asdf'] })
 
-const DOTFILES_DIR = process.env.DOTFILES_DIR ?? './dotfiles'
+const DOTFILES_DIR = resolve(__dirname, './dotfiles')
 
 logger.info(`Symlinking dotfiles from "${DOTFILES_DIR}" to home directory...`)
-await symlinkDotfileDir(DOTFILES_DIR, process.env.HOME ?? '')
+await symlinkDotfileDir(DOTFILES_DIR, process.env.HOME ?? '', DOTFILES_DIR)
 
 if (isDedot) {
   logger.info('Importing GPG key...')
 
   // NOTE: Prompt the gpg secret file to import to gpg
-  process.stdout.write('Please enter the path to your GPG secret file (e.g., secret.asc) (default: secret.asc): ')
-
-  const gpgFile = (await Bun.stdin.text()).trim() || 'secret.asc'
+  // eslint-disable-next-line no-alert
+  const gpgFile = process.env.GPG_SECRET_FILE ?? prompt('Please enter the path to your GPG secret file (e.g., secret.asc): ', 'secret.asc') ?? 'secret.asc'
 
   // NOTE: Prompt the email associated with the GPG key
-  process.stdout.write('Please enter the email associated with your GPG key: ')
+  // eslint-disable-next-line no-alert
+  const email = process.env.GPG_EMAIL ?? prompt('Please enter the email associated with your GPG key: ')
 
-  const email = (await Bun.stdin.text()).trim()
-
-  if (!email) {
+  if (email === null || email.trim() === '') {
     logger.error('Email is required to import the GPG key.')
     process.exit(1)
   }
@@ -78,20 +77,29 @@ if (isDedot) {
 
   logger.info(`Decrypting encrypted file: ${encryptedFile}...`)
 
-  // NOTE: Prompt the password to decrypt the files
-  process.stdout.write('Please enter the passphrase to decrypt the file: ')
+  // NOTE: Prompt the password to decrypt the file
+  // eslint-disable-next-line no-alert
+  const passphrase = process.env.GPG_PASSPHRASE ?? prompt('Please enter the passphrase to decrypt the file: ', '') ?? ''
 
-  const passphrase = (await Bun.stdin.text()).trim()
+  if (passphrase.trim() === '') {
+    logger.warn('Passphrase is empty. Decryption may fail if the file is encrypted with a passphrase')
+  }
 
   const privateDir = resolve(__dirname, './private')
 
   logger.info(`Decrypting ${encryptedFile} to ${privateDir}...`)
 
-  await gpgDecrypt(encryptedFile, privateDir, passphrase)
+  const tarFile = encryptedFile.replace('.gpg', '')
+
+  await gpgDecrypt(encryptedFile, tarFile, passphrase)
+
+  logger.info(`Extracting decrypted file ${tarFile} to ${privateDir}...`)
+
+  await $`tar -xvf ${tarFile} -C ${privateDir}`
 
   logger.info(`Symlink private dotfiles from "${privateDir}" to home directory...`)
 
-  await symlinkDotfileDir(privateDir, process.env.HOME ?? '')
+  await symlinkDotfileDir(privateDir, process.env.HOME ?? '', `${privateDir}/dotfiles`)
 
   logger.info(`Running private setup files from "${privateDir}"...`)
 

@@ -1,19 +1,13 @@
-import process from 'node:process'
 import { $ } from 'bun'
-import { logger } from '../scripts/utils'
-
-const asdfBin = (await $`which asdf`.text()).trim()
-if (!asdfBin) {
-  logger.error('asdf is not installed. Please install asdf first.')
-  process.exit(1)
-}
+import { asdfBinPath } from '../lib/constants'
+import { logger } from '../lib/utils'
 
 logger.info('Setting up asdf nodejs...')
 
-await $`${asdfBin} plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git`
+await $`${asdfBinPath} plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git`
 
-await $`${asdfBin} install nodejs lts`
+await $`export PATH="${asdfBinPath}:$PATH && ${asdfBinPath} install nodejs lts`
 
-await $`${asdfBin} global nodejs lts`
+await $`${asdfBinPath} set -u nodejs lts`
 
-await $`${asdfBin} reshim nodejs`
+await $`${asdfBinPath} reshim nodejs`

@@ -251,3 +251,5 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[safe]
+	directory = /mnt/48508E7B508E700C/daisy-books

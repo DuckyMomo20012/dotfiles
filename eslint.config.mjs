@@ -14,6 +14,7 @@ export default antfu(
   {
     rules: {
       'antfu/no-top-level-await': 'off',
+      '@typescript-eslint/no-floating-promises': 'error',
       'no-console': 'off',
     },
   },

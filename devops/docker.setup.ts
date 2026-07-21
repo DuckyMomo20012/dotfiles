@@ -1,11 +1,11 @@
 import process from 'node:process'
 import { $ } from 'bun'
-import { logger, prettyAptInstall } from '../scripts/utils'
+import { logger, prettyAptInstall } from '../lib/utils'
 
 logger.info('Setting up docker...')
 
 // NOTE: Uninstall old versions
-await $`for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done`
+await prettyAptInstall(`sudo apt-get remove -y docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc`)
 
 // NOTE: Run apt-get commands with prettyAptInstall to avoid issues with sudo
 // password prompts in Bun's $ template literal.
@@ -15,7 +15,7 @@ await prettyAptInstall(`sudo apt-get install -y ca-certificates curl`)
 
 await $`sudo install -m 0755 -d /etc/apt/keyrings`
 
-await $`curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc`
+await $`curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null`
 
 await $`sudo chmod a+r /etc/apt/keyrings/docker.asc`
 

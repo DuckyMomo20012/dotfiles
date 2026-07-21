@@ -13,4 +13,4 @@ curl -fsSL https://bun.com/install | bash
 source ~/.bashrc
 
 # NOTE: Run bun bootstrap file
-$(command -v bun) bootstrap.ts
+$HOME/.bun/bin/bun bootstrap.ts

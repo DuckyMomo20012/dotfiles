@@ -1,5 +1,5 @@
 import { $ } from 'bun'
-import { logger } from '../scripts/utils'
+import { logger } from '../lib/utils'
 
 logger.info('Fixing time conflict...')
 await $`sudo timedatectl set-local-rtc 1`

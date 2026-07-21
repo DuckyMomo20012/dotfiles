@@ -1,19 +1,13 @@
-import process from 'node:process'
 import { $ } from 'bun'
-import { logger } from '../scripts/utils'
-
-const asdfBin = (await $`which asdf`.text()).trim()
-if (!asdfBin) {
-  logger.error('asdf is not installed. Please install asdf first.')
-  process.exit(1)
-}
+import { asdfBinPath } from '../lib/constants'
+import { logger } from '../lib/utils'
 
 logger.info('Setting up asdf golang...')
 
-await $`${asdfBin} plugin add golang https://github.com/asdf-community/asdf-golang.git`
+await $`${asdfBinPath} plugin add golang https://github.com/asdf-community/asdf-golang.git`
 
-await $`${asdfBin} install golang 1.23.4`
+await $`${asdfBinPath} install golang 1.23.4`
 
-await $`${asdfBin} global golang 1.23.4`
+await $`${asdfBinPath} set -u golang 1.23.4`
 
-await $`${asdfBin} reshim golang`
+await $`${asdfBinPath} reshim golang`

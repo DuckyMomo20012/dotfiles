@@ -2,7 +2,7 @@ import type { ParseArgsOptionsConfig } from 'node:util'
 import { exists } from 'node:fs/promises'
 import process from 'node:process'
 import { parseArgs } from 'node:util'
-import { gpgImport, logger } from '../scripts/utils'
+import { gpgImport, logger } from '../lib/utils'
 
 const DEFAULT_EMAIL = 'example@gmail.com'
 const DEFAULT_FILENAME = 'secret.asc'

@@ -1,7 +1,7 @@
 import { exists } from 'node:fs/promises'
 import process from 'node:process'
 import { $ } from 'bun'
-import { logger, prettyAptInstall } from '../scripts/utils'
+import { logger, prettyAptInstall } from '../lib/utils'
 
 logger.info('Installing zsh...')
 
@@ -27,14 +27,34 @@ else {
   logger.info('oh-my-zsh is already installed.')
 }
 
+if (await (exists(`${process.env.HOME}/.oh-my-zsh/custom/themes/powerlevel10k`))) {
+  logger.info('Remove existing powerlevel10k theme...')
+  await $`rm -rf ${process.env.HOME}/.oh-my-zsh/custom/themes/powerlevel10k`
+}
+
 logger.info('Installing powerlevel10k theme...')
 await $`git clone --depth 1 https://github.com/romkatv/powerlevel10k.git $HOME/.oh-my-zsh/custom/themes/powerlevel10k`
+
+if (await (exists(`${process.env.HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions`))) {
+  logger.info('Remove existing zsh-autosuggestions plugin...')
+  await $`rm -rf ${process.env.HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions`
+}
 
 logger.info('Installing zsh-autosuggestions plugin...')
 await $`git clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions`
 
+if (await (exists(`${process.env.HOME}/.oh-my-zsh/custom/plugins/zsh-autocomplete`))) {
+  logger.info('Remove existing zsh-autocomplete plugin...')
+  await $`rm -rf ${process.env.HOME}/.oh-my-zsh/custom/plugins/zsh-autocomplete`
+}
+
 logger.info('Installing zsh-autocomplete plugin...')
 await $`git clone --depth 1 "https://github.com/marlonrichert/zsh-autocomplete.git" $HOME/.oh-my-zsh/custom/plugins/zsh-autocomplete`
+
+if (await (exists(`${process.env.HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting`))) {
+  logger.info('Remove existing zsh-syntax-highlighting plugin...')
+  await $`rm -rf ${process.env.HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting`
+}
 
 logger.info('Installing zsh-syntax-highlighting plugin...')
 await $`git clone --depth 1 "https://github.com/zsh-users/zsh-syntax-highlighting.git" $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting`
