@@ -43,7 +43,7 @@
 
 <!-- Table of Contents -->
 
-# :notebook_with_decorative_cover: Table of Contents
+## :notebook_with_decorative_cover: Table of Contents
 
 - [About the Project](#star2-about-the-project)
   - [Features](#dart-features)
@@ -138,20 +138,17 @@ make sure all dependency packages are installed.
 ### :card_index_dividers: Project Structure:
 
 - [`asdf`](./asdf/): Setup the `asdf` tool version manager and install plugins.
-- [`completions`](./completions/): Setup `bash` completions.
-- [`crontab`](./crontab/): Setup cron jobs.
 - [`devops`](./devops): Setup DevOps tools.
 - [`dotfiles`](./dotfiles/): Setup dotfiles.
 - [`gpg`](./gpg/): Scripts to encrypt files in the `private` directory or
   export/import `gpg` keys.
-- [`ibus-bamboo`](./ibus-bamboo/): Setup `ibus-bamboo` Vietnamese input method.
+- [`lotus`](./lotus/): Setup `lotus` Vietnamese input method.
 - [`misc`](./misc/): Miscellaneous scripts.
 - [`packages`](./packages/): Install packages.
-- [`poetry`](./poetry/): Setup `poetry` Python package manager.
 - [`private`](./private/): Private dotfiles, will be ignored and encrypted.
   - [`private/dotfiles-example`](./private/dotfiles-example): Example private
     dotfiles configuration.
-- [`utils`](./utils/): Utility scripts for this project.
+- [`lib`](./lib/): Utility scripts for this project.
 - [`zsh`](./zsh/): Setup `zsh` shell.
 
 Each directory will have a `README.md` file to explain what it does and how to
@@ -163,56 +160,20 @@ Assume your current directory has this structure:
 
 ```
 .
-├── Other packages
-│   └── zoom_amd64.deb
-├── bootstrap.sh
-├── google-chrome-stable_current_amd64.deb
 └── secret.asc
 ```
 
-Then the code below will do the following:
-
-- Install `.deb` packages in the top-level directory, but other packages in a
-  nested directory, e.g. `Other packages` won't be installed.
-- Download the file `install.sh` from this repository and run it.
-- Import the secret key from the `secret.asc` file.
-- Decrypt the `private` directory.
-
-> **Note**: `secret.asc` file should be a secret key file, not a public key
-> file.
-
-> **Note**: Please replace `<YOUR-PASSWORD>` with your passphrase, or you can
-> remove it and enter your passphrase when prompted.
-
-Every step is run seamlessly without any prompts, so you won't have any
-interruptions during running the script.
+Then run normal setup script:
 
 ```bash
-#!/usr/bin/env bash
+curl -sSL https://raw.githubusercontent.com/DuckyMomo20012/dotfiles/main/install.sh | bash -s
 
-curr_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+```
 
-# We have cd to directory to make sure find only searches in this directory
-cd "$curr_dir"
+Or auto dedot:
 
-mkdir -p "/tmp/packages/"
-
-find * -maxdepth 0 -name "*.deb" -type f | while read package; do
-    cp "$curr_dir/$package" "/tmp/packages"
-
-    sudo apt install -y "/tmp/packages/$package"
-done
-
-rm -rf "/tmp/packages/"
-
-sudo apt-get install -y curl git
-
-curl -sSL https://raw.githubusercontent.com/DuckyMomo20012/dotfiles/main/install.sh | bash -
-
-$HOME/dotfiles/gpg/import.sh -f "$curr_dir/secret.asc"
-
-$HOME/dotfiles/gpg/dedot.sh -p "<YOUR-PASSWORD>"
-
+```bash
+curl -sSL https://raw.githubusercontent.com/DuckyMomo20012/dotfiles/main/install.sh | bash -s -- --dedot --secret "secret.asc" --email "example@gmail.com" --passphrase "your_passphrase"
 ```
 
 <!-- Roadmap -->
@@ -226,7 +187,7 @@ $HOME/dotfiles/gpg/dedot.sh -p "<YOUR-PASSWORD>"
 ## :wave: Contributing
 
 <a href="https://github.com/DuckyMomo20012/dotfiles/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=DuckyMomo20012/dotfiles" />
+  <img src="https://contrib.rocks/image?repo=DuckyMomo20012/dotfiles" alt="contributors" />
 </a>
 
 Contributions are always welcome!

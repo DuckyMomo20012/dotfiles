@@ -132,3 +132,14 @@ export PATH=$(asdf where golang)/packages/bin:$PATH
 . $HOME/.asdf/plugins/java/set-java-home.zsh
 export ANDROID_HOME=~/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools
+
+# bun completions
+[ -s "/home/vinh/.bun/_bun" ] && source "/home/vinh/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
