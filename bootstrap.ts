@@ -13,6 +13,9 @@ Usage: bun bootstrap.ts [options]
 Options:
   -h, --help          Show this help message and exit
   -d, --dedot         Run the dedot script to decrypt files (default: ${DEfAULT_DEDOT})
+  -s, --secret <file>   Specify the GPG secret file to use for decryption
+  -e, --email <email>     Specify the email associated with the GPG key
+  -p, --passphrase <passphrase>   Specify the passphrase for the GPG key
 `
 
 const options = {
@@ -24,6 +27,18 @@ const options = {
     type: 'boolean',
     short: 'd',
     default: DEfAULT_DEDOT,
+  },
+  secret: {
+    type: 'string',
+    short: 's',
+  },
+  email: {
+    type: 'string',
+    short: 'e',
+  },
+  passphrase: {
+    type: 'string',
+    short: 'p',
   },
 } as const satisfies ParseArgsOptionsConfig
 
@@ -40,6 +55,9 @@ if (values.help) {
 }
 
 const isDedot = values.dedot ?? DEfAULT_DEDOT
+const gpgSecretFile = values.secret ?? process.env.GPG_SECRET_FILE
+const gpgEmail = values.email ?? process.env.GPG_EMAIL
+const gpgPassphrase = values.passphrase ?? process.env.GPG_PASSPHRASE
 
 logger.info('Installing asdf...')
 await runSetupFilesInDir('./asdf', { runMainSetupOnly: false })
@@ -60,11 +78,11 @@ if (isDedot) {
 
   // NOTE: Prompt the gpg secret file to import to gpg
   // eslint-disable-next-line no-alert
-  const gpgFile = process.env.GPG_SECRET_FILE ?? prompt('Please enter the path to your GPG secret file (e.g., secret.asc): ', 'secret.asc') ?? 'secret.asc'
+  const gpgFile = gpgSecretFile ?? prompt('Please enter the path to your GPG secret file (e.g., secret.asc): ', 'secret.asc') ?? 'secret.asc'
 
   // NOTE: Prompt the email associated with the GPG key
   // eslint-disable-next-line no-alert
-  const email = process.env.GPG_EMAIL ?? prompt('Please enter the email associated with your GPG key: ')
+  const email = gpgEmail ?? prompt('Please enter the email associated with your GPG key: ')
 
   if (email === null || email.trim() === '') {
     logger.error('Email is required to import the GPG key.')
@@ -79,7 +97,7 @@ if (isDedot) {
 
   // NOTE: Prompt the password to decrypt the file
   // eslint-disable-next-line no-alert
-  const passphrase = process.env.GPG_PASSPHRASE ?? prompt('Please enter the passphrase to decrypt the file: ', '') ?? ''
+  const passphrase = gpgPassphrase ?? prompt('Please enter the passphrase to decrypt the file: ', '') ?? ''
 
   if (passphrase.trim() === '') {
     logger.warn('Passphrase is empty. Decryption may fail if the file is encrypted with a passphrase')
