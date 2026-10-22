@@ -51,11 +51,14 @@
   - [Prerequisites](#bangbang-prerequisites)
   - [Run Locally](#running-run-locally)
 - [Usage](#eyes-usage)
+  - [Options](#gear-options)
+  - [Idempotency and backups](#recycle-idempotency-and-backups)
   - [Project Structure](#card_index_dividers-project-structure)
   - [Fresh Machine Setup](#beverage_box-fresh-machine-setup)
+  - [Adding a tool](#hammer_and_wrench-adding-a-tool)
+- [Development](#test_tube-development)
 - [Roadmap](#compass-roadmap)
 - [Contributing](#wave-contributing)
-  - [Code of Conduct](#scroll-code-of-conduct)
 - [FAQ](#grey_question-faq)
 - [License](#warning-license)
 - [Contact](#handshake-contact)
@@ -72,9 +75,15 @@
 > **Warning**: Use at your own risk. Please acknowledge for what you are copying
 > and what you are using it for.
 
-- Easy to install packages.
-- Secure your dotfiles in the `private` folder.
-- Easy to add your specific tools.
+- Easy to install packages: one command sets up a whole machine.
+- **Safe to run again and again.** Every script detects finished work and skips
+  it, so you can re-run after a failure or after changing the repository.
+- **Nothing is lost.** Existing files are backed up before they are replaced,
+  or replaced directly with `--no-backup`.
+- **Preview first** with `--dry-run`: it prints every change and makes none.
+- Secure your dotfiles in the `private` folder (encrypted with `gpg`).
+- Easy to add your specific tools, see [Adding a tool](#hammer_and_wrench-adding-a-tool).
+- Written in TypeScript and run with [bun](https://bun.sh).
 
 <!-- Getting Started -->
 
@@ -84,13 +93,10 @@
 
 ### :bangbang: Prerequisites
 
-- `Git` should be installed on your system:
-
-  ```bash
-  sudo apt-get install git
-  ```
-
-- **Bash shell support**.
+- A Debian/Ubuntu based Linux with `apt`, and a user that can use `sudo` (or
+  `root`).
+- `curl` and `git`. `install.sh` installs them, plus `unzip`, if they are
+  missing. [bun](https://bun.sh) is installed by `install.sh` too.
 
 <!-- Run Locally -->
 
@@ -98,89 +104,201 @@
 
 - **Run from script**:
 
-  File `install.sh` will clone this repository in `~/dotfiles` and run
-  `bootstrap.sh` to install all packages and dotfiles.
+  File `install.sh` clones this repository to `~/dotfiles` (or updates it when
+  it is already there), installs `bun`, and runs `bun bootstrap.ts` with the
+  arguments you pass:
 
   ```bash
-  curl -sSL https://raw.githubusercontent.com/DuckyMomo20012/dotfiles/main/install.sh | bash -
+  curl -fsSL https://raw.githubusercontent.com/DuckyMomo20012/dotfiles/main/install.sh | bash -s -- [options]
   ```
 
 - **Run manually**:
 
-  Clone the project:
+  Clone the project and go to the project directory:
 
   ```bash
-  git clone https://github.com/DuckyMomo20012/dotfiles.git
+  git clone https://github.com/DuckyMomo20012/dotfiles.git ~/dotfiles
+  cd ~/dotfiles
   ```
 
-  Go to the project directory:
+  Install `bun` if you do not have it ([bun.sh](https://bun.sh)), then run the
+  bootstrap script:
 
   ```bash
-  cd dotfiles
+  bun bootstrap.ts [options]
   ```
 
-  Run the bootstrap script:
-
-  ```bash
-  ./bootstrap.sh
-  ```
+  Tip: look at what would happen first with `bun bootstrap.ts --dry-run`.
 
 <!-- Usage -->
 
 ## :eyes: Usage
 
-> **Note**: This project is tested on Ubuntu 22.04.1 LTS and Ubuntu 22.10.
+> **Note**: This project is tested on Ubuntu 22.04 and newer LTS releases. Other
+> Debian based distributions should work, but are not tested.
 
-File `bootstrap.sh` will find all `setup.sh` files in **all directories** and
-run it. But before that, it will run `setup.sh` in the `packages` directory, to
-make sure all dependency packages are installed.
+`bun bootstrap.ts` does the following, in order:
+
+1. Runs the setup files in [`asdf`](./asdf/) (the version manager and the tools
+   it installs).
+2. Runs all other setup files (`setup.ts` and `*.setup.ts`, in every
+   directory). Directories run in a fixed order: `packages`, `install_deb` and
+   `brew` first (they provide `curl`, `git`, build tools...), then the rest
+   alphabetically. Inside a directory `setup.ts` goes first.
+3. Symlinks everything in [`dotfiles`](./dotfiles/) into your home directory.
+4. With `--dedot`: imports your GPG key, decrypts [`private`](./private/),
+   symlinks `private/dotfiles` and runs the private setup files.
+
+It stops at the first failing setup file (use `--keep-going` to run the rest
+and get a report at the end).
+
+### :gear: Options
+
+```
+Usage: bun bootstrap.ts [options]
+
+  -h, --help          Show help and exit
+  -d, --dedot         Decrypt and set up the private files
+  -s, --secret <file> GPG secret key file to import (env: GPG_SECRET_FILE)
+  -e, --email <email> Email of the GPG key (env: GPG_EMAIL)
+  -p, --passphrase <passphrase>  Passphrase of the encrypted archive (env: GPG_PASSPHRASE)
+  -n, --dry-run       Show what would change, change nothing
+      --no-backup     Overwrite existing files directly instead of backing them up
+      --force         Reinstall tools that are already installed
+  -v, --verbose       Print every command that is run
+      --only <name>   Run only setup files whose path contains <name> (repeatable)
+      --skip <name>   Skip setup files whose path contains <name> (repeatable)
+      --keep-going    Do not stop at the first failing setup file
+```
+
+Examples:
+
+```bash
+bun bootstrap.ts --dry-run                      # preview everything
+bun bootstrap.ts --only devops --skip docker    # only DevOps tools, without docker
+bun bootstrap.ts --no-backup                    # replace existing dotfiles directly
+bun bootstrap.ts --force --only helm            # reinstall helm
+```
+
+Prefer `GPG_PASSPHRASE` over `--passphrase`: command line arguments are visible
+to other users in `ps`.
+
+Every single setup file understands `--dry-run`, `--no-backup`, `--force` and
+`--verbose` too (`bun devops/helm.setup.ts --dry-run`). More about the shared
+switches and the helper library in [`lib/README.md`](./lib/README.md).
+
+### :recycle: Idempotency and backups
+
+You can run any script as often as you like and get the same result.
+
+- **Tools** are installed only when missing (`--force` reinstalls). apt
+  packages are checked one by one, the package lists are refreshed at most once
+  an hour, and repository files are rewritten only when their content differs.
+- **Shell config** (`~/.bashrc`, `~/.zshrc`, ...) lines are appended only when
+  they are not there yet, and only for shells you use.
+- **Git clones** (zsh theme and plugins) are fast-forwarded, not deleted and
+  cloned again.
+- **Symlinks** that are already correct are left alone. When something else is
+  in the way, it is moved to `<file>.backup` (an older backup is never
+  overwritten: you get `<file>.backup.<timestamp>`) and the link is created.
+  With `--no-backup` it is replaced directly. See
+  [`lib/README.md`](./lib/README.md#symlinks-and-backups).
+- **Private files** from the encrypted archive are written only when they
+  differ, and the old version is backed up in the same way.
+- **Nothing is left behind**: temporary files live in private temp directories
+  that are always removed.
 
 ### :card_index_dividers: Project Structure:
 
 - [`asdf`](./asdf/): Setup the `asdf` tool version manager and install plugins.
+- [`brew`](./brew/): Setup Homebrew and install the packages of its `Brewfile`.
 - [`devops`](./devops): Setup DevOps tools.
-- [`dotfiles`](./dotfiles/): Setup dotfiles.
+- [`dotfiles`](./dotfiles/): Dotfiles that are symlinked into the home directory.
+- [`examples`](./examples/): Wrapper script for a fresh machine.
 - [`gpg`](./gpg/): Scripts to encrypt files in the `private` directory or
   export/import `gpg` keys.
+- [`install_deb`](./install_deb/): Install the `.deb` files you put there.
+- [`lib`](./lib/): Utility library for this project, with its own
+  [documentation](./lib/README.md).
 - [`lotus`](./lotus/): Setup `lotus` Vietnamese input method.
-- [`misc`](./misc/): Miscellaneous scripts.
+- [`misc`](./misc/): Miscellaneous system fixes.
 - [`packages`](./packages/): Install packages.
 - [`private`](./private/): Private dotfiles, will be ignored and encrypted.
   - [`private/dotfiles-example`](./private/dotfiles-example): Example private
     dotfiles configuration.
-- [`lib`](./lib/): Utility scripts for this project.
+- [`tests`](./tests/): Unit tests of the library.
 - [`zsh`](./zsh/): Setup `zsh` shell.
 
-Each directory will have a `README.md` file to explain what it does and how to
-customize.
+Directories that run something have a `README.md` that explains what it does and
+how to customize it.
 
 ### :beverage_box: Fresh Machine Setup:
 
-Assume your current directory has this structure:
+Assume your current directory has this structure (everything except
+`bootstrap.sh` is optional):
 
 ```
 .
-└── secret.asc
+├── bootstrap.sh       <- copy of examples/bootstrap.sh
+├── secret.asc         <- GPG secret key
+└── code_amd64.deb     <- any .deb you want installed first
 ```
 
-Then run normal setup script:
+Then run:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/DuckyMomo20012/dotfiles/main/install.sh | bash -s
-
+./bootstrap.sh
 ```
 
-Or auto dedot:
+It installs the `.deb` files, runs `install.sh` (so every `bootstrap.ts` option
+works: `./bootstrap.sh --dry-run`, `./bootstrap.sh --no-backup`), imports
+`secret.asc` and decrypts the private files. Set `GPG_EMAIL` and
+`GPG_PASSPHRASE` to avoid the prompts.
+
+Without the wrapper, normal setup is:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/DuckyMomo20012/dotfiles/main/install.sh | bash -s -- --dedot --secret "secret.asc" --email "example@gmail.com" --passphrase "your_passphrase"
+curl -fsSL https://raw.githubusercontent.com/DuckyMomo20012/dotfiles/main/install.sh | bash -s
 ```
+
+Or setup and decrypt the private files in one go:
+
+```bash
+export GPG_PASSPHRASE="your_passphrase"
+curl -fsSL https://raw.githubusercontent.com/DuckyMomo20012/dotfiles/main/install.sh | bash -s -- --dedot --secret "secret.asc" --email "example@gmail.com"
+```
+
+### :hammer_and_wrench: Adding a tool
+
+Create `<directory>/<tool>.setup.ts` (or `setup.ts` for the main file of a
+directory). It is picked up automatically. Keep it idempotent: check before
+you act, and use the helpers from [`lib`](./lib/README.md) so `--dry-run` and
+`--no-backup` work. A complete example is in
+[`lib/README.md`](./lib/README.md#writing-an-idempotent-setup-script).
+
+<!-- Development -->
+
+## :test_tube: Development
+
+```bash
+bun install        # dev tools (eslint, typescript)
+bun run lint       # eslint
+bun run typecheck  # tsc
+bun test           # unit tests, use throwaway directories
+bun run bootstrap:dry
+```
+
+`bun.lock` is the only lockfile. CI runs the same checks, plus ShellCheck and a
+double dry run.
 
 <!-- Roadmap -->
 
 ## :compass: Roadmap
 
 - [x] Colorize output.
+- [x] Idempotent setup scripts.
+- [x] Backup or overwrite existing files.
+- [x] Dry run.
 
 <!-- Contributing -->
 
@@ -190,14 +308,8 @@ curl -sSL https://raw.githubusercontent.com/DuckyMomo20012/dotfiles/main/install
   <img src="https://contrib.rocks/image?repo=DuckyMomo20012/dotfiles" alt="contributors" />
 </a>
 
-Contributions are always welcome!
-
-<!-- Code of Conduct -->
-
-### :scroll: Code of Conduct
-
-Please read the
-[Code of Conduct](https://github.com/DuckyMomo20012/dotfiles/blob/main/CODE_OF_CONDUCT.md).
+Contributions are always welcome! Please run `bun run lint`, `bun run typecheck`
+and `bun test` before you open a pull request.
 
 <!-- FAQ -->
 
@@ -210,8 +322,18 @@ Please read the
 
 - Is this project support other Linux distributions or MacOS?
 
-  - I don't know, because I don't have time to test it, so some scripts may not
-    work on other distributions. But you can try it and let me know if it works.
+  - Debian and Ubuntu based systems are supported. On other systems the `apt`
+    based scripts will not work; the rest may. Try it with `--dry-run` first.
+
+- I ran it twice, did it duplicate anything?
+
+  - No. See [Idempotency and backups](#recycle-idempotency-and-backups). If you
+    find a script that is not safe to repeat, please open an issue.
+
+- Where did my old `~/.zshrc` go?
+
+  - To `~/.zshrc.backup` (or `~/.zshrc.backup.<timestamp>` when that name was
+    taken). Use `--no-backup` if you do not want backups.
 
 <!-- License -->
 

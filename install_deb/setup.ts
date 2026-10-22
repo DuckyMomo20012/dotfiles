@@ -1,10 +1,10 @@
-import { $ } from 'bun'
-import { logger, prettyAptInstall } from '../lib/utils'
+import { aptInstallDebFiles, aptUpdate, logger } from '../lib/utils'
 
-const files = (await Array.fromAsync($`find . -type f -name "*.deb"`.lines())).filter(Boolean)
+// NOTE: Only look next to this script, not in the whole working directory.
+const files = (await Array.fromAsync(new Bun.Glob('**/*.deb').scan({ cwd: __dirname, absolute: true, onlyFiles: true })) as string[]).sort()
 
 if (files.length === 0) {
-  logger.warn('No .deb files found in the current directory.')
+  logger.warn(`No .deb files found in ${__dirname}.`)
 }
 else {
   logger.info(`Found ${files.length} .deb file(s):`)
@@ -13,7 +13,7 @@ else {
   }
 
   logger.info('Installing deb packages...')
-  await prettyAptInstall(`sudo apt-get update`)
-  await prettyAptInstall(`sudo apt-get install -y ${files.join(' ')}`)
+  await aptUpdate()
+  await aptInstallDebFiles(files)
   logger.info('Deb packages installed successfully.')
 }

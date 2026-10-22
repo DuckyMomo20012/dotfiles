@@ -1,38 +1,30 @@
-import { exists } from 'node:fs/promises'
-import process from 'node:process'
-import { $ } from 'bun'
-import { appendUniqueLine, logger, prettyAptInstall } from '../lib/utils'
+import { aptInstall, aptUpdate, appendToShellRc, config, ensureAptRepo, getCodename, isPackageInstalled, logger } from '../lib/utils'
 
 logger.info('Installing lotus...')
 
-await $`sudo mkdir -p /etc/apt/keyrings`
+if (await isPackageInstalled('fcitx5-lotus') && !config.force) {
+  logger.info('fcitx5-lotus is already installed, skipping (use --force to reinstall).')
+}
+else {
+  const codename = await getCodename()
 
-await $`curl -fsSL https://fcitx5-lotus.pages.dev/pubkey.gpg | sudo gpg --dearmor | sudo tee /etc/apt/keyrings/fcitx5-lotus.gpg > /dev/null`
+  const repoChanged = await ensureAptRepo({
+    keyUrl: 'https://fcitx5-lotus.pages.dev/pubkey.gpg',
+    keyPath: '/etc/apt/keyrings/fcitx5-lotus.gpg',
+    dearmor: true,
+    listPath: '/etc/apt/sources.list.d/fcitx5-lotus.list',
+    listLine: `deb [signed-by=/etc/apt/keyrings/fcitx5-lotus.gpg] https://fcitx5-lotus.pages.dev/apt/${codename} ${codename} main`,
+  })
 
-await $`export CODENAME=$(grep '^UBUNTU_CODENAME=' /etc/os-release | cut -d'=' -f2) && echo "deb [signed-by=/etc/apt/keyrings/fcitx5-lotus.gpg] https://fcitx5-lotus.pages.dev/apt/$CODENAME $CODENAME main" | sudo tee /etc/apt/sources.list.d/fcitx5-lotus.list`
+  await aptUpdate({ maxAgeMinutes: repoChanged ? 0 : 60 })
 
-await prettyAptInstall(`sudo apt-get update`)
-
-await prettyAptInstall(`sudo apt-get install -y fcitx5-lotus`)
-
-if (await (exists(`${process.env.HOME}/.bashrc`))) {
-  logger.info('Setup lotus environment variables for bash')
-  await appendUniqueLine(`export XMODIFIERS=@im=fcitx`, `${process.env.HOME}/.bash_profile`)
-
-  await appendUniqueLine(`export QT_IM_MODULE=fcitx`, `${process.env.HOME}/.bash_profile`)
-
-  await appendUniqueLine(`export QT_IM_MODULES="wayland;fcitx"`, `${process.env.HOME}/.bash_profile`)
-
-  await appendUniqueLine(`export GLFW_IM_MODULE=ibus`, `${process.env.HOME}/.bash_profile`)
+  await aptInstall(['fcitx5-lotus'])
 }
 
-if (await (exists(`${process.env.HOME}/.zshrc`))) {
-  logger.info('Setup lotus environment variables for zsh')
-  await appendUniqueLine(`export XMODIFIERS=@im=fcitx`, `${process.env.HOME}/.zprofile`)
-
-  await appendUniqueLine(`export QT_IM_MODULE=fcitx`, `${process.env.HOME}/.zprofile`)
-
-  await appendUniqueLine(`export QT_IM_MODULES="wayland;fcitx"`, `${process.env.HOME}/.zprofile`)
-
-  await appendUniqueLine(`export GLFW_IM_MODULE=ibus`, `${process.env.HOME}/.zprofile`)
-}
+logger.info('Setup lotus environment variables')
+await appendToShellRc([
+  `export XMODIFIERS=@im=fcitx`,
+  `export QT_IM_MODULE=fcitx`,
+  `export QT_IM_MODULES="wayland;fcitx"`,
+  `export GLFW_IM_MODULE=ibus`,
+], { files: { bash: '.bash_profile', zsh: '.zprofile' } })

@@ -1,16 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "esnext",
     "lib": ["esnext"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "ignoreDeprecations": "6.0",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "types": ["node", "bun"],
     "strict": true,
-    "strictNullChecks": true,
+    "noEmit": true,
     "esModuleInterop": true,
-    "skipDefaultLibCheck": true,
     "skipLibCheck": true
   },
   "include": ["./**/*.ts", "./**/*.tsx"],

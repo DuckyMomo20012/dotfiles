@@ -1,31 +1,23 @@
-import { exists } from 'node:fs/promises'
-import process from 'node:process'
-import { $ } from 'bun'
-import { appendUniqueLine, logger } from '../lib/utils'
+import { join } from 'node:path'
+import { appendToShellRc, cobraCompletion, download, ensureInstalled, getArch, getHome, githubLatestAsset, installBinaryFromTarGz, logger, withTempDir } from '../lib/utils'
 
 logger.info('Setting up helmfile...')
 
-const releases = await (await fetch('https://api.github.com/repos/helmfile/helmfile/releases/latest')).json()
-// @ts-expect-error - TypeScript is not aware of the structure of the GitHub API
-// response, so we use 'any' type here.
-// eslint-disable-next-line ts/no-unsafe-call, ts/no-unsafe-member-access, ts/no-unsafe-return
-const downloadUrl = releases?.assets.find((asset: any) => asset?.browser_download_url?.includes('linux_amd64.tar.gz'))?.browser_download_url as string
+const binPath = join(getHome(), '.local', 'bin', 'helmfile')
 
-if (!downloadUrl) {
-  logger.error('Failed to find the download URL for the latest helmfile release.')
-  process.exit(1)
-}
+await ensureInstalled('helmfile', async () => {
+  const arch = getArch()
+  const asset = await githubLatestAsset('helmfile/helmfile', name => name.endsWith(`linux_${arch}.tar.gz`))
 
-await $`mkdir -p ~/.local/bin`
+  await withTempDir(async (dir) => {
+    const archive = join(dir, 'helmfile.tar.gz')
+    await download(asset.url, archive)
+    // NOTE: Only the binary is installed; the archive also holds LICENSE/README.
+    await installBinaryFromTarGz(archive, 'helmfile', binPath)
+  })
 
-await $`curl -L ${downloadUrl} | tar xz -C ~/.local/bin`
+  logger.success(`Installed helmfile ${asset.tag}`)
+}, { paths: [binPath] })
 
-if (await (exists(`${process.env.HOME}/.bashrc`))) {
-  logger.info('Setup helmfile autocompletion for bash')
-  await appendUniqueLine(`if command -v helmfile >/dev/null 2>&1; then source <(helmfile completion bash); fi`, `${process.env.HOME}/.bashrc`)
-}
-
-if (await (exists(`${process.env.HOME}/.zshrc`))) {
-  logger.info('Setup helmfile autocompletion for zsh')
-  await appendUniqueLine(`if command -v helmfile >/dev/null 2>&1; then source <(helmfile completion zsh); fi`, `${process.env.HOME}/.zshrc`)
-}
+logger.info('Setup helmfile autocompletion')
+await appendToShellRc(cobraCompletion('helmfile'))

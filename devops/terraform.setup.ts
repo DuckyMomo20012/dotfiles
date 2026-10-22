@@ -1,52 +1,62 @@
-import { exists } from 'node:fs/promises'
-import process from 'node:process'
-import { $ } from 'bun'
-import { appendUniqueLine, logger, prettyAptInstall } from '../lib/utils'
+import { aptInstall, aptUpdate, appendToShellRc, config, ensureAptRepo, getArch, getCodename, isPackageInstalled, logger, pathExists } from '../lib/utils'
 
 logger.info('Setting up terraform...')
 
-// NOTE: Run apt-get commands with prettyAptInstall to avoid issues with sudo
-// password prompts in Bun's $ template literal.
-await prettyAptInstall(`sudo apt-get update`)
+const LIST_PATH = '/etc/apt/sources.list.d/hashicorp.list'
 
-await prettyAptInstall(`sudo apt-get install -y gnupg software-properties-common`)
+if (await isPackageInstalled('terraform') && !config.force) {
+  logger.info('terraform is already installed, skipping (use --force to reinstall).')
+}
+else {
+  await aptUpdate()
 
-await $`wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null`
+  await aptInstall(['gnupg', 'software-properties-common'])
 
-// Detect system architecture & codename
-const arch = (await $`dpkg --print-architecture`.text()).trim()
-const rawCodename = (await $`grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs`.text()).trim()
+  // Detect system architecture & codename
+  const arch = getArch()
+  const rawCodename = await getCodename()
 
-// Check if HashiCorp supports the codename (HTTP 200)
-async function checkRepo(code: string) {
-  try {
-    const res = await fetch(
-      `https://apt.releases.hashicorp.com/dists/${code}/main/binary-${arch}/Packages`,
-      { headers: { Range: 'bytes=0-500' } }, // Fetch only the header of the file
-    )
-    const text = await res.text()
-    return text.includes('Package: terraform')
+  // Check if HashiCorp supports the codename.
+  // Returns `undefined` when the check itself failed (e.g. offline).
+  async function checkRepo(code: string): Promise<boolean | undefined> {
+    try {
+      const res = await fetch(
+        `https://apt.releases.hashicorp.com/dists/${code}/main/binary-${arch}/Packages`,
+        { headers: { Range: 'bytes=0-500' } }, // Fetch only the header of the file
+      )
+      if (!res.ok && res.status !== 206)
+        return false
+      return (await res.text()).includes('Package: terraform')
+    }
+    catch {
+      return undefined
+    }
   }
-  catch {
-    return false
+
+  // Use system codename if supported, otherwise fall back to 'noble' (Ubuntu 24.04 LTS)
+  const supported = config.dryRun ? true : await checkRepo(rawCodename)
+  let targetCodename = supported ? rawCodename : 'noble'
+
+  if (supported === undefined && await pathExists(LIST_PATH)) {
+    logger.warn('Could not reach apt.releases.hashicorp.com, keeping the existing repository file.')
+    targetCodename = ''
   }
+
+  if (targetCodename !== '') {
+    const keyring = '/usr/share/keyrings/hashicorp-archive-keyring.gpg'
+    const repoChanged = await ensureAptRepo({
+      keyUrl: 'https://apt.releases.hashicorp.com/gpg',
+      keyPath: keyring,
+      dearmor: true,
+      listPath: LIST_PATH,
+      listLine: `deb [arch=${arch} signed-by=${keyring}] https://apt.releases.hashicorp.com ${targetCodename} main`,
+    })
+
+    await aptUpdate({ maxAgeMinutes: repoChanged ? 0 : 60 })
+  }
+
+  await aptInstall(['terraform'])
 }
 
-// Use system codename if supported, otherwise fall back to 'noble' (Ubuntu 24.04 LTS)
-const targetCodename = (await checkRepo(rawCodename)) ? rawCodename : 'noble'
-
-await $`echo "deb [arch=${arch} signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com ${targetCodename} main" | sudo tee /etc/apt/sources.list.d/hashicorp.list`
-
-await prettyAptInstall(`sudo apt-get update`)
-
-await prettyAptInstall(`sudo apt-get install -y terraform`)
-
-if (await (exists(`${process.env.HOME}/.bashrc`))) {
-  logger.info('Setup terraform autocompletion for bash')
-  await appendUniqueLine(`if command -v terraform >/dev/null 2>&1; then source <(complete -o nospace -C $(which terraform) terraform); fi`, `${process.env.HOME}/.bashrc`)
-}
-
-if (await (exists(`${process.env.HOME}/.zshrc`))) {
-  logger.info('Setup terraform autocompletion for zsh')
-  await appendUniqueLine(`if command -v terraform >/dev/null 2>&1; then source <(complete -o nospace -C $(which terraform) terraform); fi`, `${process.env.HOME}/.zshrc`)
-}
+logger.info('Setup terraform autocompletion')
+await appendToShellRc(`if command -v terraform >/dev/null 2>&1; then source <(complete -o nospace -C $(which terraform) terraform); fi`)

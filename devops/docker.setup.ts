@@ -1,31 +1,44 @@
+import { userInfo } from 'node:os'
 import process from 'node:process'
-import { $ } from 'bun'
-import { logger, prettyAptInstall } from '../lib/utils'
+import { aptInstall, aptRemove, aptUpdate, capture, config, ensureAptRepo, exec, getArch, getCodename, isPackageInstalled, logger, readOsRelease } from '../lib/utils'
 
 logger.info('Setting up docker...')
 
-// NOTE: Uninstall old versions
-await prettyAptInstall(`sudo apt-get remove -y docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc`)
+if (await isPackageInstalled('docker-ce') && !config.force) {
+  logger.info('docker-ce is already installed, skipping (use --force to reinstall).')
+}
+else {
+  // NOTE: Uninstall old versions. Only the ones that are installed are removed,
+  // so this is a no-op on a clean machine and on every re-run.
+  await aptRemove(['docker.io', 'docker-doc', 'docker-compose', 'docker-compose-v2', 'podman-docker', 'containerd', 'runc'])
 
-// NOTE: Run apt-get commands with prettyAptInstall to avoid issues with sudo
-// password prompts in Bun's $ template literal.
-await prettyAptInstall(`sudo apt-get update`)
+  await aptInstall(['ca-certificates', 'curl'])
 
-await prettyAptInstall(`sudo apt-get install -y ca-certificates curl`)
+  // NOTE: Ubuntu derivatives (Mint, Pop!_OS...) report their own codename in
+  // `lsb_release`, `/etc/os-release` knows the Ubuntu one.
+  const os = await readOsRelease()
+  const distro = os.ID === 'debian' ? 'debian' : 'ubuntu'
+  const codename = await getCodename()
 
-await $`sudo install -m 0755 -d /etc/apt/keyrings`
+  const repoChanged = await ensureAptRepo({
+    keyUrl: `https://download.docker.com/linux/${distro}/gpg`,
+    keyPath: '/etc/apt/keyrings/docker.asc',
+    listPath: '/etc/apt/sources.list.d/docker.list',
+    listLine: `deb [arch=${getArch()} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/${distro} ${codename} stable`,
+  })
 
-await $`curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null`
+  await aptUpdate({ maxAgeMinutes: repoChanged ? 0 : 60 })
 
-await $`sudo chmod a+r /etc/apt/keyrings/docker.asc`
+  await aptInstall(['docker-ce', 'docker-ce-cli', 'containerd.io', 'docker-buildx-plugin', 'docker-compose-plugin'])
+}
 
-await $`echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null`
+const user = process.env.USER ?? userInfo().username
+const groups = (await capture(['id', '-nG', user]))?.split(/\s+/) ?? []
 
-await prettyAptInstall(`sudo apt-get update`)
-
-await prettyAptInstall(`sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin`)
-
-if (process.env.USER !== undefined) {
-  logger.info(`Adding user ${process.env.USER} to docker group`)
-  await $`sudo usermod -aG docker ${process.env.USER}`
+if (groups.includes('docker')) {
+  logger.info(`User ${user} is already in the docker group.`)
+}
+else {
+  logger.info(`Adding user ${user} to docker group`)
+  await exec(['sudo', 'usermod', '-aG', 'docker', user])
 }

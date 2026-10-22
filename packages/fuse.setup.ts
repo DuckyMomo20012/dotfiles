@@ -1,14 +1,20 @@
-import { logger, prettyAptInstall } from '../lib/utils'
+import { aptInstall, aptUpdate, exec, isPackageInstalled, logger } from '../lib/utils'
 
 logger.info('Installing Fuse...')
 
 // NOTE: Setup for AppImage
 // Ref: https://github.com/AppImage/AppImageKit/wiki/FUSE
 
-// NOTE: Run apt-get commands with prettyAptInstall to avoid issues with sudo
-// password prompts in Bun's $ template literal.
-await prettyAptInstall(`sudo add-apt-repository universe -y`)
+// NOTE: Ubuntu 24.04 renamed the package to `libfuse2t64`.
+if (await isPackageInstalled('libfuse2') || await isPackageInstalled('libfuse2t64')) {
+  logger.info('libfuse2 is already installed, skipping.')
+}
+else {
+  await aptInstall(['software-properties-common'])
 
-await prettyAptInstall(`sudo apt-get update`)
+  await exec(['sudo', 'add-apt-repository', 'universe', '-y'])
 
-await prettyAptInstall(`sudo apt-get install -y libfuse2`)
+  await aptUpdate({ maxAgeMinutes: 0 })
+
+  await aptInstall(['libfuse2'])
+}

@@ -1,9 +1,23 @@
 {
+  "name": "dotfiles",
+  "private": true,
+  "description": "My custom dotfiles for Linux",
+  "scripts": {
+    "bootstrap": "bun bootstrap.ts",
+    "bootstrap:dry": "bun bootstrap.ts --dry-run",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test"
+  },
+  "engines": {
+    "bun": ">=1.3"
+  },
   "devDependencies": {
-    "@antfu/eslint-config": "9.1.0",
-    "@types/bun": "1.3.14",
-    "@types/node": "26.1.1",
-    "eslint": "9.39.5",
+    "@antfu/eslint-config": "9.5.1",
+    "@types/bun": "1.4.3",
+    "@types/node": "26.6.5",
+    "eslint": "10.13.0",
     "eslint-plugin-format": "2.0.1",
     "typescript": "6.0.3"
   }

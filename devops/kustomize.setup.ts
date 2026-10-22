@@ -1,20 +1,17 @@
-import { exists } from 'node:fs/promises'
-import process from 'node:process'
-import { $ } from 'bun'
-import { appendUniqueLine, logger } from '../lib/utils'
+import { join } from 'node:path'
+import { appendToShellRc, bash, cobraCompletion, ensureInstalled, exec, logger, withTempDir } from '../lib/utils'
 
 logger.info('Setting up kustomize...')
 
-await $`curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash`
+await ensureInstalled('kustomize', async () => {
+  // NOTE: The installer drops a `kustomize` binary into the current directory,
+  // so run it in a temp directory instead of polluting the repository.
+  await withTempDir(async (dir) => {
+    await bash('curl -fsSL "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash', { cwd: dir })
 
-await $`sudo mv kustomize /usr/local/bin`
+    await exec(['sudo', 'install', '-m', '0755', join(dir, 'kustomize'), '/usr/local/bin/kustomize'])
+  })
+})
 
-if (await (exists(`${process.env.HOME}/.bashrc`))) {
-  logger.info('Setup kustomize autocompletion for bash')
-  await appendUniqueLine(`if command -v kustomize >/dev/null 2>&1; then source <(kustomize completion bash); fi`, `${process.env.HOME}/.bashrc`)
-}
-
-if (await (exists(`${process.env.HOME}/.zshrc`))) {
-  logger.info('Setup kustomize autocompletion for zsh')
-  await appendUniqueLine(`if command -v kustomize >/dev/null 2>&1; then source <(kustomize completion zsh); fi`, `${process.env.HOME}/.zshrc`)
-}
+logger.info('Setup kustomize autocompletion')
+await appendToShellRc(cobraCompletion('kustomize'))

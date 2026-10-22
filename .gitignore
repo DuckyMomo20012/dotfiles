@@ -12,3 +12,8 @@ node_modules
 temp
 src/generated
 .env
+
+# bun is the package manager, bun.lock is the only lockfile
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

@@ -1,8 +1,8 @@
 import type { ParseArgsOptionsConfig } from 'node:util'
-import { exists } from 'node:fs/promises'
+import { access } from 'node:fs/promises'
 import process from 'node:process'
 import { parseArgs } from 'node:util'
-import { gpgImport, logger } from '../lib/utils'
+import { applyCommonOptions, commonHelp, commonOptions, gpgImport, logger } from '../lib/utils'
 
 const DEFAULT_EMAIL = 'example@gmail.com'
 const DEFAULT_FILENAME = 'secret.asc'
@@ -12,8 +12,11 @@ Usage: bun import.ts [options]
 
 Options:
   -h, --help          Show this help message and exit
-  -e, --email <email> Specify the email address to import the GPG key (default: ${DEFAULT_EMAIL})
+  -e, --email <email> Specify the email address to import the GPG key (default: $GPG_EMAIL, then ${DEFAULT_EMAIL})
   -f, --file <filename>  Specify the filename to import the GPG key (default: ${DEFAULT_FILENAME})
+${commonHelp}
+
+The import is skipped when a secret key for the email is already in the keyring (use --force to import anyway).
 `
 
 const options = {
@@ -24,17 +27,17 @@ const options = {
   email: {
     type: 'string',
     short: 'e',
-    default: DEFAULT_EMAIL,
   },
   file: {
     type: 'string',
     short: 'f',
     default: DEFAULT_FILENAME,
   },
+  ...commonOptions,
 } as const satisfies ParseArgsOptionsConfig
 
 const { values } = parseArgs({
-  args: Bun.argv,
+  args: Bun.argv.slice(2),
   options,
   strict: true,
   allowPositionals: true,
@@ -45,12 +48,14 @@ if (values.help) {
   process.exit(0)
 }
 
-const email = values.email || DEFAULT_EMAIL
+applyCommonOptions(values)
+
+const email = values.email || process.env.GPG_EMAIL || DEFAULT_EMAIL
 const filename = values.file || DEFAULT_FILENAME
 
-if (!(await exists(filename))) {
+await access(filename).catch(() => {
   logger.error(`File ${filename} does not exist.`)
   process.exit(1)
-}
+})
 
 await gpgImport(email, filename)

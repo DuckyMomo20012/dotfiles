@@ -1,14 +1,10 @@
-import { $ } from 'bun'
-import { logger, prettyAptInstall } from '../lib/utils'
+import { aptInstall, aptUpdate, exec, logger } from '../lib/utils'
 
 logger.info('Installing Flatpak and Flathub...')
 
-// NOTE: Run apt-get commands with prettyAptInstall to avoid issues with sudo
-// password prompts in Bun's $ template literal.
-await prettyAptInstall(`sudo apt-get update`)
+await aptUpdate()
 
-await prettyAptInstall(`sudo apt-get install -y flatpak`)
+await aptInstall(['flatpak', 'gnome-software-plugin-flatpak'])
 
-await prettyAptInstall(`sudo apt-get install -y gnome-software-plugin-flatpak`)
-
-await $`sudo flatpak remote-add --if-not-exists --system flathub https://flathub.org/repo/flathub.flatpakrepo`
+// NOTE: `--if-not-exists` makes this safe to repeat.
+await exec(['sudo', 'flatpak', 'remote-add', '--if-not-exists', '--system', 'flathub', 'https://flathub.org/repo/flathub.flatpakrepo'])

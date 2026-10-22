@@ -1,26 +1,28 @@
-import { exists } from 'node:fs/promises'
+import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import process from 'node:process'
-import { $ } from 'bun'
-import { brewBinPath } from '../lib/constants'
-import { appendUniqueLine, logger } from '../lib/utils'
+import { appendToShellRc, bash, brewBinPath, ensureInstalled, exec, logger } from '../lib/utils'
 
 logger.info('Setting up brew...')
 
-await $`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`.env({
-  ...process.env,
-  NONINTERACTIVE: '1',
-})
+await ensureInstalled('brew', async () => {
+  await bash('/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"', {
+    env: { NONINTERACTIVE: '1' },
+  })
+}, { paths: [brewBinPath], label: 'Homebrew' })
 
-if (await (exists(`${process.env.HOME}/.bashrc`))) {
-  logger.info('Adding brew to ~/.bashrc')
-  await appendUniqueLine(`export PATH=/home/linuxbrew/.linuxbrew/bin:\$PATH`, `${process.env.HOME}/.bashrc`)
+logger.info('Adding brew to shell config')
+await appendToShellRc(`export PATH=/home/linuxbrew/.linuxbrew/bin:\$PATH`)
+
+const brewfile = join(__dirname, 'Brewfile')
+const entries = (await readFile(brewfile, 'utf8').catch(() => ''))
+  .split('\n')
+  .filter(line => line.trim() !== '' && !line.trim().startsWith('#'))
+
+if (entries.length === 0) {
+  logger.info('Brewfile is empty, nothing to install.')
 }
-
-if (await (exists(`${process.env.HOME}/.zshrc`))) {
-  logger.info('Adding brew to ~/.zshrc')
-  await appendUniqueLine(`export PATH=/home/linuxbrew/.linuxbrew/bin:\$PATH`, `${process.env.HOME}/.zshrc`)
+else {
+  logger.info('Installing brew packages from Brewfile...')
+  // NOTE: `brew bundle` skips what is already installed.
+  await exec([brewBinPath, 'bundle', `--file=${brewfile}`])
 }
-
-logger.info('Installing brew packages from Brewfile...')
-await $`${brewBinPath} bundle --file=${join(__dirname, './Brewfile')}`

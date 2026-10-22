@@ -1,22 +1,28 @@
-import { exists } from 'node:fs/promises'
-import process from 'node:process'
-import { $ } from 'bun'
-import { appendUniqueLine, logger } from '../lib/utils'
+import { join } from 'node:path'
+import { appendToShellRc, cobraCompletion, config, download, ensureInstalled, exec, fetchText, getArch, logger, verifySha256, withTempDir } from '../lib/utils'
 
 logger.info('Setting up ArgoCD...')
 
-await $`curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64`
+await ensureInstalled('argocd', async () => {
+  const arch = getArch()
+  const base = 'https://github.com/argoproj/argo-cd/releases/latest/download'
+  const name = `argocd-linux-${arch}`
 
-await $`sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd`
+  await withTempDir(async (dir) => {
+    const file = join(dir, name)
+    await download(`${base}/${name}`, file)
 
-await $`rm -f argocd-linux-amd64`
+    if (!config.dryRun) {
+      // NOTE: ArgoCD publishes `<sha256>  <asset>` lines for every binary.
+      const checksums = await fetchText(`${base}/cli_checksums.txt`)
+      const expected = checksums.split('\n').find(line => line.trim().endsWith(name))?.trim().split(/\s+/)[0]
+      if (expected)
+        await verifySha256(file, expected)
+    }
 
-if (await (exists(`${process.env.HOME}/.bashrc`))) {
-  logger.info('Setup argocd autocompletion for bash')
-  await appendUniqueLine(`if command -v argocd >/dev/null 2>&1; then source <(argocd completion bash); compdef _argocd argocd; fi`, `${process.env.HOME}/.bashrc`)
-}
+    await exec(['sudo', 'install', '-m', '555', file, '/usr/local/bin/argocd'])
+  })
+})
 
-if (await (exists(`${process.env.HOME}/.zshrc`))) {
-  logger.info('Setup argocd autocompletion for zsh')
-  await appendUniqueLine(`if command -v argocd >/dev/null 2>&1; then source <(argocd completion zsh); compdef _argocd argocd; fi`, `${process.env.HOME}/.zshrc`)
-}
+logger.info('Setup argocd autocompletion')
+await appendToShellRc(cobraCompletion('argocd', ' compdef _argocd argocd;'))

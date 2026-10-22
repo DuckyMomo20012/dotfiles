@@ -1,13 +1,12 @@
 import type { ParseArgsOptionsConfig } from 'node:util'
-import { exists, mkdir } from 'node:fs/promises'
-import { join, resolve } from 'node:path'
+import { access } from 'node:fs/promises'
+import { join } from 'node:path'
 import process from 'node:process'
 import { parseArgs } from 'node:util'
-import { $ } from 'bun'
-import { gpgDecrypt, logger } from '../lib/utils'
+import { applyCommonOptions, commonHelp, commonOptions, gpgDecryptArchive, logger, PRIVATE_DIR } from '../lib/utils'
 
-const DEFAULT_FILENAME = join(resolve(__dirname, '../private'), 'encrypted.tar.gz.gpg')
-const DEFAULT_DEST = resolve(__dirname, '../private')
+const DEFAULT_FILENAME = join(PRIVATE_DIR, 'encrypted.tar.gz.gpg')
+const DEFAULT_DEST = PRIVATE_DIR
 
 const helpMessage = `
 Usage: bun dedot.ts [options]
@@ -17,6 +16,7 @@ Options:
   -f, --file <filename>  Specify the filename to decrypt (default: ${DEFAULT_FILENAME})
   -d, --dest <directory>  Specify the destination directory for decrypted files (default: ${DEFAULT_DEST})
   -p, --passphrase <passphrase>  Specify the passphrase for decryption (default: from environment variable GPG_PASSPHRASE)
+${commonHelp}
 `
 
 const options = {
@@ -38,10 +38,11 @@ const options = {
     type: 'string',
     short: 'p',
   },
+  ...commonOptions,
 } as const satisfies ParseArgsOptionsConfig
 
 const { values } = parseArgs({
-  args: Bun.argv,
+  args: Bun.argv.slice(2),
   options,
   strict: true,
   allowPositionals: true,
@@ -52,32 +53,24 @@ if (values.help) {
   process.exit(0)
 }
 
+applyCommonOptions(values)
+
 const filename = values.file || DEFAULT_FILENAME
 const dest = values.dest || DEFAULT_DEST
 const passphrase = values.passphrase ?? process.env.GPG_PASSPHRASE
 
-if (!(await exists(dest))) {
-  await mkdir(dest, { recursive: true }).catch((err) => {
-    logger.error(`Failed to create destination directory ${dest}: ${err}`)
-    process.exit(1)
-  })
-}
-
-if (!filename.includes('.gpg')) {
+if (!filename.endsWith('.gpg')) {
   logger.error(`The specified file "${filename}" does not have a .gpg extension. Please provide a valid GPG encrypted file.`)
   process.exit(1)
 }
 
+await access(filename).catch(() => {
+  logger.error(`The encrypted file "${filename}" does not exist.`)
+  process.exit(1)
+})
+
 logger.info(`Decrypting ${filename} to ${dest}...`)
 
-const tarFile = resolve(dest, filename.replace(/\.gpg$/, ''))
-
-await gpgDecrypt(filename, tarFile, passphrase)
-
-logger.info(`Extracting decrypted file ${tarFile} to ${dest}...`)
-
-await $`tar -xvf ${tarFile} -C ${dest}`
-
-logger.info(`Deleting temporary tar file ${tarFile}...`)
-
-await $`rm -f ${tarFile}`
+// NOTE: The decrypted tarball lives in a temp directory and is removed
+// afterwards. Existing files in `dest` are backed up unless `--no-backup` is set.
+await gpgDecryptArchive(filename, dest, passphrase)

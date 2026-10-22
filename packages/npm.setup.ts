@@ -1,20 +1,15 @@
-import { exists } from 'node:fs/promises'
-import process from 'node:process'
-import { $ } from 'bun'
-import { appendUniqueLine, logger } from '../lib/utils'
+import { mkdir } from 'node:fs/promises'
+import { join } from 'node:path'
+import { appendToShellRc, appendUniqueLine, config, getHome, logger } from '../lib/utils'
 
 logger.info('Setup npm config...')
 
-await $`mkdir -p ${process.env.HOME}/.npm-global`
+const home = getHome()
 
-await appendUniqueLine(`prefix=${process.env.HOME}/.npm-global`, `${process.env.HOME}/.npmrc`)
+if (!config.dryRun)
+  await mkdir(join(home, '.npm-global'), { recursive: true })
 
-if (await (exists(`${process.env.HOME}/.bashrc`))) {
-  logger.info('Adding npm global path to ~/.bashrc')
-  await appendUniqueLine(`export PATH=\$HOME/.npm-global/bin:\$PATH`, `${process.env.HOME}/.bashrc`)
-}
+await appendUniqueLine(`prefix=${home}/.npm-global`, join(home, '.npmrc'))
 
-if (await (exists(`${process.env.HOME}/.zshrc`))) {
-  logger.info('Adding npm global path to ~/.zshrc')
-  await appendUniqueLine(`export PATH=\$HOME/.npm-global/bin:\$PATH`, `${process.env.HOME}/.zshrc`)
-}
+logger.info('Adding npm global path to shell config')
+await appendToShellRc(`export PATH=\$HOME/.npm-global/bin:\$PATH`)

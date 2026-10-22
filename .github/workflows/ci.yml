@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Unit tests
+        run: bun test
+
+      - name: ShellCheck
+        run: shellcheck install.sh examples/bootstrap.sh private/update-token.sh
+
+      # Nothing may change in dry-run mode, and it must work twice in a row.
+      - name: Dry run (twice)
+        run: |
+          bun bootstrap.ts --dry-run --skip docker
+          bun bootstrap.ts --dry-run --skip docker
+
+  idempotent-symlinks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      # Link the dotfiles twice into a throwaway $HOME: the second run must change nothing.
+      - name: Symlink twice
+        run: |
+          export HOME="$(mktemp -d)"
+          echo "pre-existing" > "$HOME/.zshrc"
+          bun bootstrap.ts --only __none__ --skip asdf
+          bun bootstrap.ts --only __none__ --skip asdf | tee second-run.log
+          grep -q "0 linked" second-run.log
+          test "$(find "$HOME" -name '*.backup*' | wc -l)" -eq 1

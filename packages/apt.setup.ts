@@ -1,4 +1,4 @@
-import { logger, prettyAptInstall } from '../lib/utils'
+import { aptInstall, aptUpdate, logger } from '../lib/utils'
 
 logger.info('Installing APT packages...')
 
@@ -21,8 +21,8 @@ const packages = [
   'gnome-shell-extension-manager',
 ].filter(pkg => !pkg.startsWith('!'))
 
-// NOTE: Run apt-get commands with prettyAptInstall to avoid issues with sudo
-// password prompts in Bun's $ template literal.
-await prettyAptInstall(`sudo apt-get update`)
+// NOTE: `aptUpdate` skips the update when the package lists are fresh, and
+// `aptInstall` only installs what is missing, so re-running is cheap.
+await aptUpdate()
 
-await prettyAptInstall(`sudo apt-get install -y ${packages.join(' ')}`)
+await aptInstall(packages)
