@@ -16,6 +16,8 @@ if (!downloadUrl) {
   process.exit(1)
 }
 
+await $`mkdir -p ~/.local/bin`
+
 await $`curl -L ${downloadUrl} | tar xz -C ~/.local/bin`
 
 if (await (exists(`${process.env.HOME}/.bashrc`))) {

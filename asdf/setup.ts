@@ -33,7 +33,7 @@ if (await (exists(`${process.env.HOME}/.bashrc`))) {
 if (await (exists(`${process.env.HOME}/.zshrc`))) {
   logger.info('Adding asdf to ~/.zshrc')
   await appendUniqueLine(`export PATH=\$HOME/.asdf/bin:\$PATH`, `${process.env.HOME}/.zshrc`)
-  await appendUniqueLine(`export PATH="\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH`, `${process.env.HOME}/.zshrc`)
+  await appendUniqueLine(`export PATH=\${ASDF_DATA_DIR:-\$HOME/.asdf}/shims:\$PATH`, `${process.env.HOME}/.zshrc`)
 
   logger.info('Setup asdf autocompletion for zsh')
   await appendUniqueLine(`if command -v asdf >/dev/null 2>&1; then source <(asdf completion zsh); fi`, `${process.env.HOME}/.zshrc`)

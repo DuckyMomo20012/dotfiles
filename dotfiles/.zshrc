@@ -78,8 +78,10 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-autocomplete)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
+# zsh-autocomplete must load before oh-my-zsh runs compinit.
+source $ZSH/custom/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -147,3 +149,9 @@ esac
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+export PATH=/home/linuxbrew/.linuxbrew/bin:$PATH
+if command -v kustomize >/dev/null 2>&1; then source <(kustomize completion zsh); fi
+if command -v terraform >/dev/null 2>&1; then source <(complete -o nospace -C $(which terraform) terraform); fi
+if command -v uv >/dev/null 2>&1; then source <(eval "$(uv generate-shell-completion zsh)"); fi
+if command -v uvx >/dev/null 2>&1; then source <(eval "$(uvx --generate-shell-completion zsh)"); fi
