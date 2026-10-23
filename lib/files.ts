@@ -257,7 +257,7 @@ export interface SymlinkDirSummary {
  */
 export function isLinkableDotfile(name: string): boolean {
   // NOTE: `.backup` files are made by this library, they must never be linked back.
-  return !name.startsWith('!') && !name.endsWith('.md') && !name.includes('setup') && !/\.backup(\.\d+)*$/.test(name)
+  return !name.startsWith('!') && !name.endsWith('.md') && !name.includes('setup') && !/\.backup(?:\.\d+)*$/.test(name)
 }
 
 /**
@@ -298,28 +298,33 @@ export async function symlinkDotfileDir(
     const result = await linkFile(absolute, targetPath, options)
     summary.results.push(result)
 
+    // NOTE: In dry-run, `linkFile` already described what it would do.
+    if (!(options.dryRun ?? config.dryRun) && result.status !== 'unchanged')
+      logger.success(`Linked ${absolute} to ${targetPath}`)
+
     switch (result.status) {
       case 'unchanged':
         summary.unchanged++
         logger.debug(`Already linked ${targetPath}`)
         break
+      case 'created':
+        summary.created++
+        break
       case 'backed-up':
         summary.backedUp++
         summary.created++
-        logger.success(`Linked ${absolute} to ${targetPath}`)
         break
       case 'overwritten':
         summary.overwritten++
         summary.created++
-        logger.success(`Linked ${absolute} to ${targetPath}`)
         break
       default:
         summary.created++
-        logger.success(`Linked ${absolute} to ${targetPath}`)
     }
   }
 
-  logger.info(`Symlinks: ${summary.created} linked, ${summary.unchanged} already up to date, ${summary.backedUp} backed up`)
+  const dry = options.dryRun ?? config.dryRun
+  logger.info(`Symlinks${dry ? ' (dry run, nothing changed)' : ''}: ${summary.created} ${dry ? 'to link' : 'linked'}, ${summary.unchanged} already up to date, ${summary.backedUp} ${dry ? 'to back up' : 'backed up'}`)
   return summary
 }
 

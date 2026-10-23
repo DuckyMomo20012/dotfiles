@@ -1,7 +1,7 @@
 import { aptInstallDebFiles, aptUpdate, logger } from '../lib/utils'
 
 // NOTE: Only look next to this script, not in the whole working directory.
-const files = (await Array.fromAsync(new Bun.Glob('**/*.deb').scan({ cwd: __dirname, absolute: true, onlyFiles: true })) as string[]).sort()
+const files = (await Array.fromAsync(new Bun.Glob('**/*.deb').scan({ cwd: __dirname, absolute: true, onlyFiles: true }))).sort()
 
 if (files.length === 0) {
   logger.warn(`No .deb files found in ${__dirname}.`)

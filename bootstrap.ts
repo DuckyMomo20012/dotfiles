@@ -45,32 +45,32 @@ The script is safe to run again and again: finished work is detected and skipped
 `
 
 const options = {
-  help: {
+  'help': {
     type: 'boolean',
     short: 'h',
   },
-  dedot: {
+  'dedot': {
     type: 'boolean',
     short: 'd',
     default: DEFAULT_DEDOT,
   },
-  secret: {
+  'secret': {
     type: 'string',
     short: 's',
   },
-  email: {
+  'email': {
     type: 'string',
     short: 'e',
   },
-  passphrase: {
+  'passphrase': {
     type: 'string',
     short: 'p',
   },
-  only: {
+  'only': {
     type: 'string',
     multiple: true,
   },
-  skip: {
+  'skip': {
     type: 'string',
     multiple: true,
   },

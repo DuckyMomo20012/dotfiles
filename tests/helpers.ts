@@ -14,6 +14,6 @@ export async function makeSandbox(prefix = 'dotfiles-test-') {
       await writeFile(full, content)
       return full
     },
-    cleanup: () => rm(root, { recursive: true, force: true }),
+    cleanup: async () => rm(root, { recursive: true, force: true }),
   }
 }

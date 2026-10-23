@@ -15,7 +15,11 @@ signatures are unchanged (new parameters are optional).
 - `lib/` is split into small modules (still re-exported from `lib/utils.ts`),
   documented in `lib/README.md`.
 - Unit tests (`bun test`), a CI workflow, `bun run lint|typecheck|test` scripts.
-- Per-directory READMEs; `examples/bootstrap.sh` (the fresh machine wrapper).
+- Documentation: a guide set in `docs/` (getting started, recipes, how it works,
+  private files, troubleshooting), a full helper reference in `lib/README.md`, a README
+  for every directory, `examples/bootstrap.sh` (the fresh machine wrapper).
+- `eslint.config.mjs`: the type-aware `no-floating-promises` rule is scoped to
+  TypeScript files; it crashed ESLint on YAML (`.github/workflows/ci.yml`).
 
 ### Idempotency
 

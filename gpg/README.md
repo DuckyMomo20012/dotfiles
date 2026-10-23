@@ -8,6 +8,72 @@ These scripts encrypt/decrypt the [`private`](../private/) directory and
 export/import `gpg` keys. The email of the key can be given with `--email` or
 the `GPG_EMAIL` environment variable.
 
+All scripts are run with bun from the repository root. Run any of them with
+`--help` to see its options.
+
+## The whole workflow in five commands
+
+The details of each step are in [`docs/private-files.md`](../docs/private-files.md).
+
+```bash
+export GPG_EMAIL=you@example.com
+
+# 1. once: back up your secret key (file mode 600). Keep it offline.
+bun gpg/export.ts --file ~/secret.asc
+
+# 2. every time you change private/dotfiles: encrypt, then commit the .gpg file
+bun gpg/endot.ts
+git add private/encrypted.tar.gz.gpg && git commit -m "private: update"
+
+# 3. on a new machine: import the key (skipped if present) ...
+bun gpg/import.ts --file ~/secret.asc
+
+# 4. ... and decrypt (asks for the passphrase, or reads GPG_PASSPHRASE)
+bun gpg/dedot.ts
+
+# 5. link the files and run private setup files (or do 3-5 with one command)
+bun bootstrap.ts --dedot --secret ~/secret.asc
+```
+
+Every script supports `--dry-run` where it changes something, and is safe to run
+again.
+
+## Which file to use
+
+| I want to...                               | Script                     |
+| ------------------------------------------ | -------------------------- |
+| Save my secret key to a file               | `export.ts`                |
+| Put my key on a new machine                | `import.ts`                |
+| Encrypt `private/` after editing it        | `endot.ts`                 |
+| Decrypt `private/encrypted.tar.gz.gpg`     | `dedot.ts`                 |
+| Do import + decrypt + link + private setup | `bun bootstrap.ts --dedot` |
+
+## Example session
+
+```text
+$ bun gpg/endot.ts --email you@example.com
+Encrypting /tmp/endot-k3Jd9s/encrypted.tar.gz to /home/you/dotfiles/private/encrypted.tar.gz.gpg for you@example.com...
+Encrypted /tmp/endot-k3Jd9s/encrypted.tar.gz to /home/you/dotfiles/private/encrypted.tar.gz.gpg for you@example.com
+Deleting temporary tar file /tmp/endot-k3Jd9s/encrypted.tar.gz...
+
+$ bun gpg/dedot.ts
+Decrypting /home/you/dotfiles/private/encrypted.tar.gz.gpg to /home/you/dotfiles/private...
+Decrypting ... to /tmp/dotfiles-private-Qw12/archive.tar.gz...
+Extracting ... to /home/you/dotfiles/private...
+Private files: 3 written, 0 already up to date, 0 backed up
+
+$ bun gpg/dedot.ts                       # again
+Private files: 0 written, 3 already up to date, 0 backed up
+
+$ echo edited > private/dotfiles/.git-credentials; bun gpg/dedot.ts
+Backed up existing /home/you/dotfiles/private/dotfiles/.git-credentials to ....git-credentials.backup
+Private files: 1 written, 2 already up to date, 1 backed up
+```
+
+Back-up files made by `dedot.ts` contain your old (possibly secret) content. They
+are git-ignored, left out of the archive and never linked into `$HOME`: delete them
+when you do not need them.
+
 ## Usage
 
 - File `dedot.ts`: Decrypt the encrypted archive.
@@ -22,6 +88,15 @@ the `GPG_EMAIL` environment variable.
     - Running it again changes nothing.
     - The passphrase is given to `gpg` on stdin, not on its command line. Without
       one (`-p` or `GPG_PASSPHRASE`) `gpg` asks for it.
+
+  - Examples:
+
+    ```bash
+    bun gpg/dedot.ts                                   # default file and destination
+    bun gpg/dedot.ts --dry-run                         # decrypt nothing, show the plan
+    bun gpg/dedot.ts -f ~/backup/private.tar.gz.gpg -d /tmp/check   # inspect somewhere else
+    GPG_PASSPHRASE=... bun gpg/dedot.ts --no-backup    # unattended, overwrite changed files
+    ```
 
   - Usage:
 
@@ -49,6 +124,14 @@ the `GPG_EMAIL` environment variable.
       is deleted after the encryption process.
     - Encrypting is not deterministic: the `.gpg` file changes on every run, even
       when the content did not.
+
+  - Examples:
+
+    ```bash
+    bun gpg/endot.ts -e you@example.com                # the usual case
+    bun gpg/endot.ts -d ~/other-private -f other.tar.gz.gpg
+    bun gpg/endot.ts --dry-run                         # build the tarball, do not encrypt
+    ```
 
   - Usage:
 

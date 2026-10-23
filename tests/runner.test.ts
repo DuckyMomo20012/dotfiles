@@ -12,11 +12,13 @@ afterEach(async () => {
 })
 
 /** A setup script that appends its own name to `$ORDER_FILE`. */
-const recorder = (name: string, code = 0) => `
+function recorder(name: string, code = 0) {
+  return `
 import { appendFileSync } from 'node:fs'
 appendFileSync(process.env.ORDER_FILE!, '${name}\\n')
 process.exit(${code})
 `
+}
 
 async function seed() {
   await sb.write('zeta/setup.ts', recorder('zeta/setup'))
@@ -29,7 +31,7 @@ async function seed() {
   await sb.write('notes.ts', recorder('NOPE-name'))
 }
 
-const run = async (options: Parameters<typeof runSetupFilesInDir>[1] = {}) => {
+async function run(options: Parameters<typeof runSetupFilesInDir>[1] = {}) {
   const orderFile = sb.path('order.txt')
   await Bun.write(orderFile, '')
   const result = await runSetupFilesInDir(sb.root, { ...options, env: { ORDER_FILE: orderFile, DOTFILES_NO_ERROR_HANDLER: '1' } })

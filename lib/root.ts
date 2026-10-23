@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer'
 import { readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { config } from './config'

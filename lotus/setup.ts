@@ -1,4 +1,4 @@
-import { aptInstall, aptUpdate, appendToShellRc, config, ensureAptRepo, getCodename, isPackageInstalled, logger } from '../lib/utils'
+import { appendToShellRc, aptInstall, aptUpdate, config, ensureAptRepo, getCodename, isPackageInstalled, logger } from '../lib/utils'
 
 logger.info('Installing lotus...')
 

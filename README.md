@@ -47,6 +47,7 @@
 
 - [About the Project](#star2-about-the-project)
   - [Features](#dart-features)
+- [Documentation](#books-documentation)
 - [Getting Started](#toolbox-getting-started)
   - [Prerequisites](#bangbang-prerequisites)
   - [Run Locally](#running-run-locally)
@@ -84,6 +85,22 @@
 - Secure your dotfiles in the `private` folder (encrypted with `gpg`).
 - Easy to add your specific tools, see [Adding a tool](#hammer_and_wrench-adding-a-tool).
 - Written in TypeScript and run with [bun](https://bun.sh).
+
+<!-- Documentation -->
+
+## :books: Documentation
+
+| Read this                                            | When you want to                                                  |
+| ---------------------------------------------------- | ----------------------------------------------------------------- |
+| [docs/getting-started.md](./docs/getting-started.md) | Set up a machine end to end: preview, run, verify, update, undo   |
+| [docs/recipes.md](./docs/recipes.md)                 | Copy-paste solutions: add a tool, undo, servers, CI               |
+| [docs/how-it-works.md](./docs/how-it-works.md)       | Understand the run order, idempotency rules, backups, dry run     |
+| [docs/private-files.md](./docs/private-files.md)     | Keep secrets encrypted: key, archive, new machine, token rotation |
+| [docs/troubleshooting.md](./docs/troubleshooting.md) | Fix an error message                                              |
+| [lib/README.md](./lib/README.md)                     | Write or change a setup script; reference of every helper         |
+| [gpg/README.md](./gpg/README.md)                     | Use the encrypt/decrypt/export/import scripts                     |
+| [CHANGELOG.md](./CHANGELOG.md)                       | See what changed and why                                          |
+| `<directory>/README.md`                              | Learn what one directory installs and how to customize it         |
 
 <!-- Getting Started -->
 
@@ -180,6 +197,30 @@ bun bootstrap.ts --no-backup                    # replace existing dotfiles dire
 bun bootstrap.ts --force --only helm            # reinstall helm
 ```
 
+A typical session:
+
+```text
+$ bun bootstrap.ts --dry-run          # 1. look
+$ bun bootstrap.ts                    # 2. do it
+$ bun bootstrap.ts                    # 3. again: nothing to do
+Symlinks: 0 linked, 270 already up to date, 0 backed up
+All done.
+$ bun bootstrap.ts --force --only helm   # 4. reinstall one thing
+```
+
+Environment variables (all optional):
+
+| Variable                                         | Same as / effect                                           |
+| ------------------------------------------------ | ---------------------------------------------------------- |
+| `DOTFILES_DRY_RUN=1`                             | `--dry-run`                                                |
+| `DOTFILES_NO_BACKUP=1`                           | `--no-backup`                                              |
+| `DOTFILES_FORCE=1`                               | `--force`                                                  |
+| `DOTFILES_VERBOSE=1`                             | `--verbose`                                                |
+| `GPG_EMAIL`, `GPG_SECRET_FILE`, `GPG_PASSPHRASE` | `--email`, `--secret`, `--passphrase`                      |
+| `GITHUB_TOKEN`                                   | Avoid the GitHub API rate limit (asdf, helmfile downloads) |
+| `DOTFILES_APT_INTERACTIVE=1`                     | Let apt ask questions (default: never ask)                 |
+| `NO_COLOR=1`                                     | Plain output                                               |
+
 Prefer `GPG_PASSPHRASE` over `--passphrase`: command line arguments are visible
 to other users in `ps`.
 
@@ -214,6 +255,7 @@ You can run any script as often as you like and get the same result.
 - [`brew`](./brew/): Setup Homebrew and install the packages of its `Brewfile`.
 - [`devops`](./devops): Setup DevOps tools.
 - [`dotfiles`](./dotfiles/): Dotfiles that are symlinked into the home directory.
+- [`docs`](./docs/): Guides: getting started, recipes, how it works, private files, troubleshooting.
 - [`examples`](./examples/): Wrapper script for a fresh machine.
 - [`gpg`](./gpg/): Scripts to encrypt files in the `private` directory or
   export/import `gpg` keys.

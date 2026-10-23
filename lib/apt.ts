@@ -21,6 +21,8 @@ function aptGetCommand(args: string[]): string[] {
 
 /** `true` when the Debian package is fully installed. */
 export async function isPackageInstalled(pkg: string): Promise<boolean> {
+  // NOTE: `${Status}` is dpkg-query's own format syntax, not a JavaScript template.
+  // eslint-disable-next-line no-template-curly-in-string
   const status = await capture(['dpkg-query', '-W', '-f=${Status}', pkg])
   return status !== null && status.includes('install ok installed')
 }
@@ -78,6 +80,8 @@ export async function aptInstallDebFiles(files: string[]): Promise<string[]> {
     const meta = await capture(['dpkg-deb', '-f', file, 'Package', 'Version'])
     const name = /^Package:\s*(\S+)/m.exec(meta ?? '')?.[1]
     const version = /^Version:\s*(\S+)/m.exec(meta ?? '')?.[1]
+    // NOTE: `${Version}` is dpkg-query's own format syntax, not a JavaScript template.
+    // eslint-disable-next-line no-template-curly-in-string
     const installed = name ? await capture(['dpkg-query', '-W', '-f=${Version}', name]) : null
 
     if (name && version && installed === version) {

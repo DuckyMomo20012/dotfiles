@@ -1,4 +1,4 @@
-import { aptInstall, aptUpdate, appendToShellRc, config, ensureAptRepo, getArch, getCodename, isPackageInstalled, logger, pathExists } from '../lib/utils'
+import { appendToShellRc, aptInstall, aptUpdate, config, ensureAptRepo, getArch, getCodename, isPackageInstalled, logger, pathExists } from '../lib/utils'
 
 logger.info('Setting up terraform...')
 

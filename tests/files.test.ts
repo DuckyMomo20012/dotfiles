@@ -1,5 +1,6 @@
-import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
+import { Buffer } from 'node:buffer'
 import { lstat, readdir, readFile, readlink, symlink, writeFile } from 'node:fs/promises'
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import { appendUniqueLine, backupFile, linkFile, mergeDir, symlinkDotfileDir } from '../lib/utils'
 import { makeSandbox } from './helpers'
 

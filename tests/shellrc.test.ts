@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import { readFile } from 'node:fs/promises'
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import { appendToShellRc, cobraCompletion } from '../lib/utils'
 import { makeSandbox } from './helpers'
 

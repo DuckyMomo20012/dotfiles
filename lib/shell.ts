@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer'
 import { createHash } from 'node:crypto'
 import { existsSync } from 'node:fs'
 import { chmod, mkdir, mkdtemp, readFile, rename, rm } from 'node:fs/promises'
@@ -112,7 +113,7 @@ export async function exec(cmd: string[], options: ExecOptions = {}): Promise<Ex
 }
 
 /** Run a bash script string (with `pipefail`). Use `${SUDO}` for privileged pipe stages. */
-export function bash(script: string, options: ExecOptions = {}): Promise<ExecResult> {
+export async function bash(script: string, options: ExecOptions = {}): Promise<ExecResult> {
   return exec(['bash', '-o', 'pipefail', '-c', script], options)
 }
 
@@ -132,7 +133,7 @@ export async function succeeds(cmd: string[], options: ExecOptions = {}): Promis
 // Generic helpers
 // ---------------------------------------------------------------------------
 
-export function sleep(ms: number) {
+export async function sleep(ms: number) {
   return new Promise<void>(resolve => setTimeout(resolve, ms))
 }
 
@@ -169,14 +170,11 @@ export async function withTempDir<T>(fn: (dir: string) => Promise<T>, prefix = '
 
 /** CPU architecture in the naming used by most Linux release assets. */
 export function getArch(): 'amd64' | 'arm64' {
-  switch (process.arch) {
-    case 'x64':
-      return 'amd64'
-    case 'arm64':
-      return 'arm64'
-    default:
-      throw new Error(`Unsupported CPU architecture: ${process.arch}`)
-  }
+  if (process.arch === 'x64')
+    return 'amd64'
+  if (process.arch === 'arm64')
+    return 'arm64'
+  throw new Error(`Unsupported CPU architecture: ${process.arch}`)
 }
 
 /** Parse `/etc/os-release` into a key/value map (empty when the file is missing). */
@@ -358,7 +356,7 @@ export async function installBinaryFromTarGz(archive: string, binaryName: string
   await withTempDir(async (dir) => {
     await exec(['tar', '-xzf', archive, '-C', dir])
 
-    const [found] = await Array.fromAsync(new Bun.Glob(`**/${binaryName}`).scan({ cwd: dir, onlyFiles: true })) as string[]
+    const [found] = await Array.fromAsync(new Bun.Glob(`**/${binaryName}`).scan({ cwd: dir, onlyFiles: true }))
     if (found === undefined)
       throw new Error(`${archive} does not contain a file named "${binaryName}"`)
 
