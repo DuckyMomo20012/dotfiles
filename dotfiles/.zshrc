@@ -84,6 +84,14 @@ plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 source $ZSH/custom/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 source $ZSH/oh-my-zsh.sh
 
+# oh-my-zsh lib/key-bindings.zsh rebinds Up/Down after zsh-autocomplete loads; restore its keys.
+bindkey "^[[A" up-line-or-search
+bindkey "^[OA" up-line-or-search
+bindkey "^[[B" down-line-or-select
+bindkey "^[OB" down-line-or-select
+bindkey "^[[5~" history-search
+bindkey "^[[6~" menu-select
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
