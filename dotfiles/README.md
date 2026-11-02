@@ -9,6 +9,7 @@ Files in this directory are symlinked into your home directory by
 | File             | Purpose                                                     |
 | ---------------- | ----------------------------------------------------------- |
 | `.zshrc`         | zsh + oh-my-zsh + powerlevel10k, PATH, completions          |
+| `.zshenv`        | `skip_global_compinit=1` (needed by zsh-autocomplete)       |
 | `.p10k.zsh`      | powerlevel10k prompt configuration                          |
 | `.gitconfig`     | Git configuration (private values go in `.gitconfig.local`) |
 | `.npmrc`         | npm prefix (`~/.npm-global`)                                |

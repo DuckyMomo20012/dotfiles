@@ -6,9 +6,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
-# Path to your oh-my-zsh installation.
+# Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
@@ -38,6 +38,9 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Uncomment the following line to change how often to auto-update (in days).
 # zstyle ':omz:update' frequency 13
+
+# Uncomment the following line to set how old an update must be before it's applied (in days).
+# zstyle ':omz:update' cooldown 10
 
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS="true"
@@ -78,19 +81,27 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
+# zsh-syntax-highlighting must stay LAST in this list (it has to hook the line editor after
+# every other plugin has registered its widgets and hooks).
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
-# zsh-autocomplete must load before oh-my-zsh runs compinit.
+# zsh-autocomplete must be sourced before oh-my-zsh.sh (which calls compinit); it takes over
+# compinit. Needs `skip_global_compinit=1` in ~/.zshenv on Ubuntu (see dotfiles/.zshenv).
+# Settings: https://github.com/marlonrichert/zsh-autocomplete/blob/main/CONFIGURATION.md
 source $ZSH/custom/plugins/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 source $ZSH/oh-my-zsh.sh
 
-# oh-my-zsh lib/key-bindings.zsh rebinds Up/Down after zsh-autocomplete loads; restore its keys.
+# oh-my-zsh lib/key-bindings.zsh rebinds Up/Down after zsh-autocomplete loads: restore its keys.
+# Up/Down: line navigation, then history menu / completion menu.
+# Alt+Up / Alt+Down: jump straight into the history menu / completion menu.
 bindkey "^[[A" up-line-or-search
 bindkey "^[OA" up-line-or-search
 bindkey "^[[B" down-line-or-select
 bindkey "^[OB" down-line-or-select
-bindkey "^[[5~" history-search
-bindkey "^[[6~" menu-select
+bindkey "^[^[[A" history-search-backward
+bindkey "^[[1;3A" history-search-backward
+bindkey "^[^[[B" menu-select
+bindkey "^[[1;3B" menu-select
 
 # User configuration
 

@@ -5,7 +5,8 @@ import { aptInstall, bash, capture, config, exec, getHome, gitCloneOrUpdate, log
 
 logger.info('Installing zsh...')
 
-await aptInstall(['zsh'])
+// NOTE: git is needed at run time too: zsh-autocomplete clones its zasync helper with it.
+await aptInstall(['zsh', 'git'])
 
 logger.info('Changing default shell to zsh...')
 // NOTE: In dry-run zsh may not be installed yet, so fall back to the usual path.
@@ -48,8 +49,11 @@ const custom = join(ohMyZshDir, 'custom')
 logger.info('Installing powerlevel10k theme...')
 await gitCloneOrUpdate('https://github.com/romkatv/powerlevel10k.git', join(custom, 'themes', 'powerlevel10k'))
 
+// NOTE: All three follow the default branch of their repository (the install
+// instructions of each project recommend it: autocomplete is only tagged now and
+// then, autosuggestions has not been tagged since v0.7.1).
 const plugins = [
-  ['zsh-autosuggestions', 'https://github.com/zsh-users/zsh-autosuggestions'],
+  ['zsh-autosuggestions', 'https://github.com/zsh-users/zsh-autosuggestions.git'],
   ['zsh-autocomplete', 'https://github.com/marlonrichert/zsh-autocomplete.git'],
   ['zsh-syntax-highlighting', 'https://github.com/zsh-users/zsh-syntax-highlighting.git'],
 ] as const
@@ -58,3 +62,11 @@ for (const [name, url] of plugins) {
   logger.info(`Installing ${name} plugin...`)
   await gitCloneOrUpdate(url, join(custom, 'plugins', name))
 }
+
+// NOTE: zsh-autocomplete no longer bundles its async helper "zasync": it clones it
+// into the cache directory on the first prompt. Doing it here keeps that first
+// prompt fast and free of git output (which powerlevel10k instant prompt would
+// complain about). The plugin keeps the clone up to date by itself.
+logger.info('Installing zasync (used by zsh-autocomplete)...')
+const cacheHome = process.env.XDG_CACHE_HOME ?? join(home, '.cache')
+await gitCloneOrUpdate('https://github.com/marlonrichert/zasync.git', join(cacheHome, 'zsh', 'zasync'))
